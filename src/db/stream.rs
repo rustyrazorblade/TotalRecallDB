@@ -43,7 +43,7 @@ impl Stream {
     /* we take a HashMap of String -> Field here
     * we're going to convert it to HashMap<u8, Field> for the Row struct
     */
-    pub fn insert(&mut self, data: &mut HashMap<String, Field>) -> Result<Row, StreamError> {
+    pub fn insert(&mut self, mut data: HashMap<String, Field>) -> Result<Row, StreamError> {
         // validate the inserted data
         let mut row_map : HashMap<u8, Field> = HashMap::new();
         for (key, val) in data.drain() {
@@ -57,11 +57,25 @@ impl Stream {
         let row = try!(Row::new(row_map));
         Ok(row)
     }
+
 }
 
 
 
-#[cfg(tests)]
+#[cfg(test)]
 mod tests {
+    use super::Stream;
+    use super::super::schema::{Schema, Type};
+    use super::super::field::Field;
+    use std::collections::HashMap;
 
+    #[test]
+    fn test_insert_works_normal_case() {
+        let mut s = Stream::new();
+        s.schema.add_type("name", Type::String);
+        let mut row = HashMap::new();
+        row.insert("name".to_string(), Field::String("Jon".to_string()));
+        let result = s.insert(row);
+
+    }
 }
