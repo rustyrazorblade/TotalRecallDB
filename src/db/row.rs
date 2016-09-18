@@ -6,6 +6,7 @@ pub enum RowError {
     MissingId
 }
 
+// it's the table's job to validate the data going into the row
 pub struct Row {
     fields: HashMap<u8, Field>,
 }
@@ -22,16 +23,5 @@ mod tests {
     use super::super::field::Field;
     use super::*;
 
-    #[test]
-    fn test_missing_id_fails() {
-        let mut tmp = HashMap::new();
-        tmp.insert(1, Field::String("test".to_string()));
-        match Row::new(tmp) {
-            Err(RowError::MissingId) => {},
-            _ => {
-                panic!("Was expecting a RowError");
-            }
-        }
 
-    }
 }
