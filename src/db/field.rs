@@ -4,7 +4,3 @@ enum Field {
     String(String)
 }
 
-enum Type {
-    Int,
-    String
-}

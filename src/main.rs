@@ -1,3 +1,6 @@
+#![feature(plugin)]
+#![plugin(peg_syntax_ext)]
+
 mod db;
 
 fn main() {

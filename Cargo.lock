@@ -1,4 +1,14 @@
 [root]
 name = "poopdb"
 version = "0.1.0"
+dependencies = [
+ "peg 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
+[[package]]
+name = "peg"
+version = "0.3.16"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[metadata]
+"checksum peg 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)" = "f7bee4a8d7e3655f9e64245d326f0a7dcbe9e3763e05159bcdd4747e0e96fc03"

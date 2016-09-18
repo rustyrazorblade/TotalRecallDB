@@ -2,6 +2,14 @@
 use std::collections::hash_map::HashMap;
 use super::row::Row;
 
+/*
+DB types
+*/
+enum Type {
+    Int,
+    String
+}
+
 pub struct Stream {
     max_id: u64,
     rows: HashMap<u64, Row>
@@ -19,6 +27,8 @@ impl Stream {
         }
     }
 }
+
+
 
 #[cfg(tests)]
 mod tests {
