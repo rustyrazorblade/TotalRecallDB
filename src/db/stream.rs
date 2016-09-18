@@ -3,16 +3,24 @@ use std::collections::hash_map::HashMap;
 use super::row::Row;
 
 pub struct Stream {
-    num_rows: u64,
+    max_id: u64,
     rows: HashMap<u64, Row>
 }
 
+/**
+This is a weird DB.  There's no primary key, since everything is based off append only streaming
 
+*/
 impl Stream {
     pub fn new() -> Stream {
         Stream {
-            num_rows: 0,
+            max_id: 0,
             rows:HashMap::new()
         }
     }
+}
+
+#[cfg(tests)]
+mod tests {
+
 }
