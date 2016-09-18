@@ -1,5 +1,6 @@
 
 use super::row::Row;
+use super::schema::Schema;
 
 /*
 DB types

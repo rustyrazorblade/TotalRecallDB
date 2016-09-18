@@ -27,10 +27,20 @@ impl Database {
 mod tests {
     use super::Database;
 
+    // returns a valid DB for use with testing with valid simple schema
+    fn get_db_with_stream() {
+        let mut db = Database::new();
+        db.create_table("Jon");
+
+
+    }
+
     #[test]
     fn create_table() {
         let mut db = Database::new();
         db.create_table("Jon");
     }
+
+
 
 }
