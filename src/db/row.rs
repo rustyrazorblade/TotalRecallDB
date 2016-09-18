@@ -12,7 +12,7 @@ pub struct Row {
 }
 
 impl Row {
-    fn new(fields: HashMap<u8, Field>) -> Result<Row, RowError>  {
+    pub fn new(fields: HashMap<u8, Field>) -> Result<Row, RowError>  {
         Ok(Row{fields: fields})
     }
 }

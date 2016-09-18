@@ -13,7 +13,7 @@ pub enum Type {
 
 #[derive(Debug)]
 pub struct TypeDef {
-    id: u8,
+    pub id: u8,
     dbtype: Type,
 }
 // owned by a Stream
@@ -36,6 +36,10 @@ impl Schema {
         self.num_fields += 1;
 
     }
+    pub fn get(&self, name: &str) -> Option<&TypeDef> {
+        self.fields.get(&name.to_string())
+    }
+
 
 
 }
