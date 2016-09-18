@@ -1,5 +1,4 @@
 
-use std::collections::hash_map::HashMap;
 use super::row::Row;
 
 /*
@@ -12,7 +11,7 @@ enum Type {
 
 pub struct Stream {
     max_id: u64,
-    rows: HashMap<u64, Row>
+    rows: Vec<Row>
 }
 
 /**
@@ -23,7 +22,7 @@ impl Stream {
     pub fn new() -> Stream {
         Stream {
             max_id: 0,
-            rows:HashMap::new()
+            rows:Vec::new()
         }
     }
 }
