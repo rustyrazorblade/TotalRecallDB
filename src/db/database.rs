@@ -17,6 +17,10 @@ impl Database {
         let tmp = Stream::new();
         self.tables.insert(name.to_string(), tmp);
     }
+
+    fn get_table_mut(&mut self, name: &str) -> Option<&mut Stream> {
+        self.tables.get_mut(name)
+    }
 }
 
 #[cfg(test)]
@@ -28,4 +32,5 @@ mod tests {
         let mut db = Database::new();
         db.create_table("Jon");
     }
+
 }
