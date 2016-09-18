@@ -1,9 +1,9 @@
 use std::collections::HashMap;
-use super::table::Table;
+use super::stream::Stream;
 
 
 pub struct Database {
-    tables: HashMap<String, Table>
+    tables: HashMap<String, Stream>
 }
 
 impl Database {
@@ -14,7 +14,7 @@ impl Database {
     }
 
     fn create_table(&mut self, name: &str)  {
-        let tmp = Table::new();
+        let tmp = Stream::new();
         self.tables.insert(name.to_string(), tmp);
     }
 }

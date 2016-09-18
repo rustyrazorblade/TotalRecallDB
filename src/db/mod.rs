@@ -1,4 +1,4 @@
 pub mod database;
-pub mod table;
+pub mod stream;
 pub mod row;
 pub mod server;
