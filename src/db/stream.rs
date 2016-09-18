@@ -18,6 +18,23 @@ impl From<RowError> for StreamError {
 
 }
 
+pub struct RowBuilder {
+    data: HashMap<String, Field>,
+}
+
+impl RowBuilder {
+    fn new() -> RowBuilder {
+        RowBuilder{data:HashMap::new()}
+    }
+    fn set_string(&mut self, key: &str, val: &str) {
+
+    }
+    fn commit(&mut self) {
+
+    }
+}
+
+
 pub struct Stream {
     max_id: u64,
     rows: Vec<Row>,
@@ -57,6 +74,11 @@ impl Stream {
         let row = try!(Row::new(row_map));
         Ok(row)
     }
+    pub fn builder(&self) -> RowBuilder {
+        let builder = RowBuilder::new();
+        builder
+    }
+
 
 }
 
@@ -69,6 +91,15 @@ mod tests {
     use super::super::field::Field;
     use std::collections::HashMap;
 
+    fn get_stream() -> Stream {
+        let mut s = Stream::new();
+        s.schema.add_type("name", Type::String);
+        s.schema.add_type("age", Type::Int);
+        s.schema.add_type("created", Type::Timestamp);
+        s
+
+    }
+
     #[test]
     fn test_insert_works_normal_case() {
         let mut s = Stream::new();
@@ -77,5 +108,12 @@ mod tests {
         row.insert("name".to_string(), Field::String("Jon".to_string()));
         let result = s.insert(row);
 
+    }
+
+    fn test_builder() {
+        let mut s = get_stream();
+        let mut row = s.builder();
+        row.set_string("name", "value");
+        row.commit();
     }
 }
