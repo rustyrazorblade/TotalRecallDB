@@ -12,8 +12,16 @@ impl Database {
             tables: HashMap::new()
         }
     }
+
     fn create_table(&mut self, name: String)  {
         let tmp = Table::new();
         self.tables.insert(name, tmp);
     }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Database;
+
+
 }
