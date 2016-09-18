@@ -13,9 +13,9 @@ impl Database {
         }
     }
 
-    fn create_table(&mut self, name: String)  {
+    fn create_table(&mut self, name: &str)  {
         let tmp = Table::new();
-        self.tables.insert(name, tmp);
+        self.tables.insert(name.to_string(), tmp);
     }
 }
 
@@ -23,5 +23,9 @@ impl Database {
 mod tests {
     use super::Database;
 
-
+    #[test]
+    fn create_table() {
+        let mut db = Database::new();
+        db.create_table("Jon");
+    }
 }
