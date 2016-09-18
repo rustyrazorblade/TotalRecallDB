@@ -21,6 +21,7 @@ impl Stream {
             schema: Schema::new(),
         };
         stream.schema.add_type("_id", Type::Int);
+        stream.schema.add_type("_created", Type::Timestamp);
         stream
     }
 }

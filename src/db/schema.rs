@@ -6,7 +6,8 @@ DB types
 #[derive(Debug)]
 pub enum Type {
     Int,
-    String
+    String,
+    Timestamp,
 }
 
 
