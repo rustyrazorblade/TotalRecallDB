@@ -12,7 +12,8 @@ enum Type {
 
 pub struct Stream {
     max_id: u64,
-    rows: Vec<Row>
+    rows: Vec<Row>,
+    schema: Schema,
 }
 
 /**
@@ -23,7 +24,8 @@ impl Stream {
     pub fn new() -> Stream {
         Stream {
             max_id: 0,
-            rows:Vec::new()
+            rows: Vec::new(),
+            schema: Schema::new(),
         }
     }
 }

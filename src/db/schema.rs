@@ -7,3 +7,9 @@ pub struct Schema {
     // maps a name to an id
     fields: HashMap<String, u8>,
 }
+
+impl Schema {
+    pub fn new() -> Schema {
+        Schema{num_fields: 0, fields: HashMap::new()}
+    }
+}

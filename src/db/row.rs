@@ -22,6 +22,4 @@ mod tests {
     use std::collections::HashMap;
     use super::super::field::Field;
     use super::*;
-
-
 }
