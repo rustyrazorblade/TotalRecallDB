@@ -2,6 +2,9 @@
 use super::row::Row;
 use super::schema::{Schema, Type};
 
+pub enum StreamError {
+    ValidationError(String),
+}
 
 pub struct Stream {
     max_id: u64,
@@ -23,6 +26,10 @@ impl Stream {
         stream.schema.add_type("_id", Type::Int);
         stream.schema.add_type("_created", Type::Timestamp);
         stream
+    }
+
+    pub fn insert() -> Result<Row, StreamError> {
+        Err(StreamError::ValidationError("Could not insert".to_string()))
     }
 }
 
