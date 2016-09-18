@@ -1,6 +1,8 @@
+use std::collections::HashMap;
 
 use super::row::Row;
 use super::schema::{Schema, Type};
+use super::field::Field;
 
 pub enum StreamError {
     ValidationError(String),
@@ -28,7 +30,8 @@ impl Stream {
         stream
     }
 
-    pub fn insert() -> Result<Row, StreamError> {
+    pub fn insert(data: HashMap<String, Field>) -> Result<Row, StreamError> {
+        // validate the inserted data
         Err(StreamError::ValidationError("Could not insert".to_string()))
     }
 }
