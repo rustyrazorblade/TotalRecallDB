@@ -1,7 +1,7 @@
 use std::collections::HashMap;
-use db::table::Table;
+use super::table::Table;
 
 
-struct Database {
+pub struct Database {
     tables: HashMap<String, Table>
 }

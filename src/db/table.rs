@@ -1,5 +1,6 @@
+
 use std::collections::hash_map::HashMap;
-use db::row::Row;
+use super::row::Row;
 
 pub struct Table {
     num_rows: u64,
