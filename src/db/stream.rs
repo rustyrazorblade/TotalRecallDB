@@ -26,10 +26,15 @@ impl RowBuilder {
     fn new() -> RowBuilder {
         RowBuilder{data:HashMap::new()}
     }
-    fn set_string(&mut self, key: &str, val: &str) {
-
+    fn set_string(&mut self, key: &str, val: &str) -> &mut RowBuilder {
+        self.data.insert(key.to_string(), Field::String(val.to_string()));
+        self
     }
-    fn commit(&mut self) {
+    fn set_int(&mut self, key: &str, val: i64) -> &mut RowBuilder {
+        self.data.insert(key.to_string(), Field::Int(val));
+        self
+    }
+    fn commit(mut self, stream: &mut Stream) {
 
     }
 }
@@ -113,7 +118,9 @@ mod tests {
     fn test_builder() {
         let mut s = get_stream();
         let mut row = s.builder();
-        row.set_string("name", "value");
-        row.commit();
+
+        row.set_string("name", "value")
+           .set_int("age", 10);
+        row.commit(&mut s);
     }
 }
