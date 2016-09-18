@@ -4,7 +4,7 @@ mod db;
 
 fn main() {
     println!("Hello, world!");
-
+    let database = db::database::Database::new();
 
 
 }

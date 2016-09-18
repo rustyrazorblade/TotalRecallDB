@@ -7,6 +7,7 @@ pub struct Table {
     rows: HashMap<u64, Row>
 }
 
+
 impl Table {
     pub fn new() -> Table {
         Table{

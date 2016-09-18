@@ -7,7 +7,7 @@ pub struct Database {
 }
 
 impl Database {
-    fn new() -> Database {
+    pub fn new() -> Database {
         Database{
             tables: HashMap::new()
         }
