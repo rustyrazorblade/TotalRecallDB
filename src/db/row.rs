@@ -8,6 +8,7 @@ pub enum RowError {
 }
 
 // it's the table's job to validate the data going into the row
+#[derive(Clone)]
 pub struct Row {
     fields: HashMap<u8, Field>,
 }

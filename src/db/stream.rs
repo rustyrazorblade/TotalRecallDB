@@ -40,6 +40,7 @@ impl RowBuilder {
 #[derive(Debug)]
 pub struct Stream {
     max_id: u64,
+    inserts: u64,
     ttl: Option<u64>,
     rows: Vec<Row>,
     schema: Schema,
@@ -61,6 +62,7 @@ impl Stream {
     pub fn new_empty() -> Stream {
         let mut stream = Stream {
             max_id: 0,
+            inserts: 0,
             rows: Vec::new(),
             schema: Schema::new(),
             ttl: None,
@@ -83,6 +85,8 @@ impl Stream {
 
         }
         let row = try!(Row::new(row_map));
+        self.rows.push(row.clone());
+        self.inserts += 1;
         Ok(row)
     }
 
@@ -118,7 +122,7 @@ mod tests {
         let mut row = RowBuilder::new();
         row.set_string("name", "test");
         let result = s.insert(row).unwrap();
-
+        assert_eq!(s.inserts, 1);
         // was the data inserted?
 
     }
