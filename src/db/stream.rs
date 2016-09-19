@@ -5,6 +5,7 @@ use super::row::{Row, RowError};
 use super::schema::{Schema, Type};
 use super::field::Field;
 
+#[derive(Debug)]
 pub enum StreamError {
     ValidationError(String),
     FieldNotFound(String),
@@ -36,9 +37,10 @@ impl RowBuilder {
     }
 }
 
-
+#[derive(Debug)]
 pub struct Stream {
     max_id: u64,
+    ttl: Option<u64>,
     rows: Vec<Row>,
     schema: Schema,
 }
@@ -49,13 +51,20 @@ This is a weird DB.  There's no primary key, since everything is based off appen
 */
 impl Stream {
     pub fn new() -> Stream {
+        let mut stream = Stream::new_empty();
+        stream.schema.add_type("_id", Type::Int);
+        stream.schema.add_type("_created", Type::Timestamp);
+        stream
+    }
+
+    // used in temporary tables
+    pub fn new_empty() -> Stream {
         let mut stream = Stream {
             max_id: 0,
             rows: Vec::new(),
             schema: Schema::new(),
+            ttl: None,
         };
-        stream.schema.add_type("_id", Type::Int);
-        stream.schema.add_type("_created", Type::Timestamp);
         stream
     }
 
@@ -76,11 +85,10 @@ impl Stream {
         let row = try!(Row::new(row_map));
         Ok(row)
     }
-    pub fn builder(&self) -> RowBuilder {
-        let builder = RowBuilder::new();
-        builder
-    }
 
+    fn scan(&self) -> Result<Stream, StreamError> {
+        Ok(Stream::new())
+    }
 
 }
 
@@ -109,13 +117,15 @@ mod tests {
 
         let mut row = RowBuilder::new();
         row.set_string("name", "test");
-        let result = s.insert(row);
+        let result = s.insert(row).unwrap();
+
+        // was the data inserted?
 
     }
 
     fn test_builder() {
         let mut s = get_stream();
-        let mut row = s.builder();
+        let mut row = RowBuilder::new();
 
         row.set_string("name", "value")
            .set_int("age", 10);

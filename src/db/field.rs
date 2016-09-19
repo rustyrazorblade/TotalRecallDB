@@ -1,4 +1,5 @@
 
+#[derive(Debug)]
 pub enum Field {
     Null,
     Int(i64),
