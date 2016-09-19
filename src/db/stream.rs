@@ -39,10 +39,12 @@ impl RowBuilder {
 
 #[derive(Debug)]
 pub struct Stream {
-    inserts: u64,
+    inserts: u64, // total number of inserts this Stream has seen
+    lowest_id: Option<u64>,  // lowest id we still have in the Stream
     ttl: Option<u64>,
     rows: HashMap<u64, Row>,
     schema: Schema,
+
 }
 
 /**
@@ -61,6 +63,7 @@ impl Stream {
     pub fn new_empty() -> Stream {
         let mut stream = Stream {
             inserts: 0,
+            lowest_id: None,
             rows: HashMap::new(),
             schema: Schema::new(),
             ttl: None,
@@ -88,11 +91,33 @@ impl Stream {
         Ok(row)
     }
 
-    fn scan(&self) -> Result<Stream, StreamError> {
-        Ok(Stream::new())
-    }
 
 }
+
+impl<'a> IntoIterator for &'a Stream {
+    type Item = Row;
+    type IntoIter = StreamIterator<'a>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        // TODO fix the position
+        StreamIterator{position:0,
+                       stream: self}
+    }
+}
+
+pub struct StreamIterator<'a> {
+    position: u64,
+    stream: &'a Stream,
+}
+
+impl<'a> Iterator for StreamIterator<'a> {
+    type Item = Row;
+    fn next(&mut self) -> Option<Row> {
+        None
+    }
+}
+
+
 
 
 
@@ -132,5 +157,8 @@ mod tests {
         row.set_string("name", "value")
            .set_int("age", 10);
         s.insert(row);
+
+//        let r = s.next().unwrap();
+
     }
 }
