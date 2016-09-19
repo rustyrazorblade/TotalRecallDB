@@ -39,10 +39,9 @@ impl RowBuilder {
 
 #[derive(Debug)]
 pub struct Stream {
-    max_id: u64,
     inserts: u64,
     ttl: Option<u64>,
-    rows: Vec<Row>,
+    rows: HashMap<u64, Row>,
     schema: Schema,
 }
 
@@ -61,9 +60,8 @@ impl Stream {
     // used in temporary tables
     pub fn new_empty() -> Stream {
         let mut stream = Stream {
-            max_id: 0,
             inserts: 0,
-            rows: Vec::new(),
+            rows: HashMap::new(),
             schema: Schema::new(),
             ttl: None,
         };
@@ -85,7 +83,7 @@ impl Stream {
 
         }
         let row = try!(Row::new(row_map));
-        self.rows.push(row.clone());
+        self.rows.insert(self.inserts, row.clone());
         self.inserts += 1;
         Ok(row)
     }
