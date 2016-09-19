@@ -34,9 +34,6 @@ impl RowBuilder {
         self.data.insert(key.to_string(), Field::Int(val));
         self
     }
-    fn commit(mut self, stream: &mut Stream) {
-
-    }
 }
 
 
@@ -65,14 +62,14 @@ impl Stream {
     /* we take a HashMap of String -> Field here
     * we're going to convert it to HashMap<u8, Field> for the Row struct
     */
-    pub fn insert(&mut self, mut data: HashMap<String, Field>) -> Result<Row, StreamError> {
+    pub fn insert(&mut self, mut row_builder: RowBuilder) -> Result<Row, StreamError> {
         // validate the inserted data
         let mut row_map : HashMap<u8, Field> = HashMap::new();
-        for (key, val) in data.drain() {
+        for (key, val) in row_builder.data.drain() {
             // get the field from the schema
             // TypeDef
             let tmp = try!(self.schema.get(&key)
-                                      .ok_or(StreamError::FieldNotFound(key.to_string())));
+                               .ok_or(StreamError::FieldNotFound(key.to_string())));
             row_map.insert(tmp.id, val);
 
         }
@@ -91,7 +88,7 @@ impl Stream {
 
 #[cfg(test)]
 mod tests {
-    use super::Stream;
+    use super::{Stream, RowBuilder};
     use super::super::schema::{Schema, Type};
     use super::super::field::Field;
     use std::collections::HashMap;
@@ -109,8 +106,9 @@ mod tests {
     fn test_insert_works_normal_case() {
         let mut s = Stream::new();
         s.schema.add_type("name", Type::String);
-        let mut row = HashMap::new();
-        row.insert("name".to_string(), Field::String("Jon".to_string()));
+
+        let mut row = RowBuilder::new();
+        row.set_string("name", "test");
         let result = s.insert(row);
 
     }
@@ -121,6 +119,6 @@ mod tests {
 
         row.set_string("name", "value")
            .set_int("age", 10);
-        row.commit(&mut s);
+        s.insert(row);
     }
 }
