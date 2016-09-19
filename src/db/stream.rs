@@ -158,6 +158,11 @@ mod tests {
            .set_int("age", 10);
         s.insert(row);
 
+        let mut c = 0;
+        for r in s.into_iter() {
+            c += 1;
+        }
+        assert_eq!(c, 1);
 //        let r = s.next().unwrap();
 
     }
