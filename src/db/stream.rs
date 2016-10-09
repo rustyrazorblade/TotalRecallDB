@@ -74,7 +74,7 @@ impl Stream {
     /* we take a HashMap of String -> Field here
     * we're going to convert it to HashMap<u8, Field> for the Row struct
     */
-    pub fn insert(&mut self, mut row_builder: RowBuilder) -> Result<Row, StreamError> {
+    pub fn insert(&mut self, mut row_builder: RowBuilder) -> Result<u64, StreamError> {
         // validate the inserted data
         let mut row_map : HashMap<u8, Field> = HashMap::new();
         for (key, val) in row_builder.data.drain() {
@@ -85,10 +85,15 @@ impl Stream {
             row_map.insert(tmp.id, val);
 
         }
+        let row_id = self.inserts;
         let row = try!(Row::new(row_map));
         self.rows.insert(self.inserts, row.clone());
         self.inserts += 1;
-        Ok(row)
+        Ok(row_id)
+    }
+
+    fn get(&self, position: u64) -> Option<&Row> {
+        self.rows.get(&position)
     }
 
 
@@ -124,10 +129,6 @@ impl<'a> Iterator for StreamIterator<'a> {
     }
 }
 
-
-
-
-
 #[cfg(test)]
 mod tests {
     use super::{Stream, RowBuilder};
@@ -152,7 +153,10 @@ mod tests {
         let mut row = RowBuilder::new();
         row.set_string("name", "test");
         let result = s.insert(row).unwrap();
+        assert_eq!(result, 0);
         assert_eq!(s.inserts, 1);
+        let r = s.get(result);
+
         // was the data inserted?
 
     }

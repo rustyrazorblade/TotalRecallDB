@@ -22,6 +22,7 @@ impl fmt::Debug for Row {
         tmp.finish()
 
     }
+
 }
 
 
@@ -29,6 +30,10 @@ impl fmt::Debug for Row {
 impl Row {
     pub fn new(fields: HashMap<u8, Field>) -> Result<Row, RowError>  {
         Ok(Row{fields: fields})
+    }
+
+    fn get(&self, field: u8) -> Option<Field> {
+        None
     }
 }
 
