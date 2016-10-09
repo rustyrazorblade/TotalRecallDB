@@ -3,7 +3,9 @@
 
 mod db;
 
+use db::server::Server;
+
 fn main() {
     println!("Hello, world!");
-    let server = db::server::Server::new();
+    let server = Server::new();
 }

@@ -110,6 +110,13 @@ pub struct StreamIterator<'a> {
     stream: &'a Stream,
 }
 
+impl<'a> StreamIterator<'a> {
+    fn offset(&'a mut self, num: u64) -> &'a mut StreamIterator {
+        self.position = num;
+        self
+    }
+}
+
 impl<'a> Iterator for StreamIterator<'a> {
     type Item = Row;
     fn next(&mut self) -> Option<Row> {
@@ -150,6 +157,7 @@ mod tests {
 
     }
 
+    #[test]
     fn test_builder() {
         let mut s = get_stream();
         let mut row = RowBuilder::new();
