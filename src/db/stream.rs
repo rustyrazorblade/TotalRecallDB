@@ -148,15 +148,16 @@ mod tests {
     #[test]
     fn test_insert_works_normal_case() {
         let mut s = Stream::new();
-        s.schema.add_type("name", Type::String);
+        let name_id = s.schema.add_type("name", Type::String);
+
 
         let mut row = RowBuilder::new();
         row.set_string("name", "test");
         let result = s.insert(row).unwrap();
         assert_eq!(result, 0);
         assert_eq!(s.inserts, 1);
-        let r = s.get(result);
-
+        let row2 = s.get(result).unwrap();
+        let name = row2.get(name_id).unwrap();
         // was the data inserted?
 
     }

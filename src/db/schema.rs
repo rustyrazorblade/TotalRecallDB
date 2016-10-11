@@ -29,11 +29,12 @@ impl Schema {
         Schema{num_fields: 0, fields: HashMap::new()}
     }
 
-    pub fn add_type(&mut self, name: &str, dbtype: Type) {
+    pub fn add_type(&mut self, name: &str, dbtype: Type) -> u8 {
         let next_id = self.num_fields + 1;
         let typedef = TypeDef{ id: next_id, dbtype: dbtype};
         self.fields.insert(name.to_string(), typedef);
         self.num_fields += 1;
+        next_id
 
     }
     pub fn get(&self, name: &str) -> Option<&TypeDef> {

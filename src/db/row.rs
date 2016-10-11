@@ -32,9 +32,11 @@ impl Row {
         Ok(Row{fields: fields})
     }
 
-    fn get(&self, field: u8) -> Option<Field> {
-        None
+    pub fn get(&self, field: u8) -> Option<&Field> {
+        self.fields.get(&field)
     }
+
+//    fn get_string(&self, field: u8) ->
 }
 
 #[cfg(test)]
