@@ -4,7 +4,7 @@ use std::io::Cursor;
 use self::byteorder::{ReadBytesExt, WriteBytesExt, BigEndian, LittleEndian};
 
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Value {
     data: Vec<u8>
 }

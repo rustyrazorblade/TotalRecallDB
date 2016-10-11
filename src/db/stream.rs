@@ -100,7 +100,7 @@ impl Stream {
 }
 
 impl<'a> IntoIterator for &'a Stream {
-    type Item = Row;
+    type Item = &'a Row;
     type IntoIter = StreamIterator<'a>;
 
     fn into_iter(self) -> Self::IntoIter {
@@ -123,9 +123,11 @@ impl<'a> StreamIterator<'a> {
 }
 
 impl<'a> Iterator for StreamIterator<'a> {
-    type Item = Row;
-    fn next(&mut self) -> Option<Row> {
-        None
+    type Item = &'a Row;
+    fn next(&mut self) -> Option<&'a Row> {
+        let tmp = self.stream.get(self.position);
+        self.position = self.position + 1;
+        tmp
     }
 }
 
@@ -133,7 +135,7 @@ impl<'a> Iterator for StreamIterator<'a> {
 mod tests {
     use super::{Stream, RowBuilder};
     use super::super::schema::{Schema, Type};
-    use super::super::field::Field;
+    use super::super::value::Value;
     use std::collections::HashMap;
 
     fn get_stream() -> Stream {
@@ -150,7 +152,6 @@ mod tests {
         let mut s = Stream::new();
         let name_id = s.schema.add_type("name", Type::String);
 
-
         let mut row = RowBuilder::new();
         row.set_string("name", "test");
         let result = s.insert(row).unwrap();
@@ -159,7 +160,14 @@ mod tests {
         let row2 = s.get(result).unwrap();
         let name = row2.get(name_id).unwrap();
         // was the data inserted?
+        assert_eq!(row2.get(name_id).unwrap().clone(),
+                   Value::from("test"));
 
+    }
+
+    #[test]
+    fn test_equality() {
+        assert_eq!(Value::from("jon"), Value::from("jon"));
     }
 
     #[test]
