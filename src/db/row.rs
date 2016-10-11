@@ -1,7 +1,7 @@
 use std::time::{Duration, SystemTime};
 use std::collections::HashMap;
-use super::field::Field;
 use std::fmt;
+use super::value::Value;
 
 pub enum RowError {
     MissingId
@@ -10,7 +10,7 @@ pub enum RowError {
 // it's the table's job to validate the data going into the row
 #[derive(Clone)]
 pub struct Row {
-    fields: HashMap<u8, Field>,
+    fields: HashMap<u8, Value>,
 }
 
 impl fmt::Debug for Row {
@@ -28,11 +28,11 @@ impl fmt::Debug for Row {
 
 
 impl Row {
-    pub fn new(fields: HashMap<u8, Field>) -> Result<Row, RowError>  {
+    pub fn new(fields: HashMap<u8, Value>) -> Result<Row, RowError>  {
         Ok(Row{fields: fields})
     }
 
-    pub fn get(&self, field: u8) -> Option<&Field> {
+    pub fn get(&self, field: u8) -> Option<&Value> {
         self.fields.get(&field)
     }
 
@@ -42,6 +42,6 @@ impl Row {
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
-    use super::super::field::Field;
+    use super::super::value::Value;
     use super::*;
 }

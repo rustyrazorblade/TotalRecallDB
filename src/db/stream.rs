@@ -3,7 +3,7 @@ use std::error;
 
 use super::row::{Row, RowError};
 use super::schema::{Schema, Type};
-use super::field::Field;
+use super::value::Value;
 
 #[derive(Debug)]
 pub enum StreamError {
@@ -20,7 +20,7 @@ impl From<RowError> for StreamError {
 }
 
 pub struct RowBuilder {
-    data: HashMap<String, Field>,
+    data: HashMap<String, Value>,
 }
 
 impl RowBuilder {
@@ -28,11 +28,11 @@ impl RowBuilder {
         RowBuilder{data:HashMap::new()}
     }
     fn set_string(&mut self, key: &str, val: &str) -> &mut RowBuilder {
-        self.data.insert(key.to_string(), Field::String(val.to_string()));
+        self.data.insert(key.to_string(), Value::from(val));
         self
     }
     fn set_int(&mut self, key: &str, val: i64) -> &mut RowBuilder {
-        self.data.insert(key.to_string(), Field::Int(val));
+        self.data.insert(key.to_string(), Value::from(val));
         self
     }
 }
@@ -76,7 +76,7 @@ impl Stream {
     */
     pub fn insert(&mut self, mut row_builder: RowBuilder) -> Result<u64, StreamError> {
         // validate the inserted data
-        let mut row_map : HashMap<u8, Field> = HashMap::new();
+        let mut row_map : HashMap<u8, Value> = HashMap::new();
         for (key, val) in row_builder.data.drain() {
             // get the field from the schema
             // TypeDef
