@@ -4,7 +4,8 @@ use super::value::Value;
 pub struct RowBuilder {
     pub data: HashMap<String, Value>,
 }
-
+/// RowBuilder is a nice wrapper around the Values
+/// This is used in conjunction with Stream.insert
 impl RowBuilder {
     pub fn new() -> RowBuilder {
         RowBuilder{data:HashMap::new()}
