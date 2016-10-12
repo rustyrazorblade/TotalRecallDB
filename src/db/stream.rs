@@ -134,7 +134,7 @@ mod tests {
 
     fn get_stream_with_data() -> Stream {
         let mut s = get_stream();
-        for x in 0..100000 {
+        for x in 0..10 {
             let mut row = RowBuilder::new();
             row.set_string("name", "test");
             row.set_int("age", x);
@@ -183,10 +183,12 @@ mod tests {
     }
 
     #[test]
-    fn test_iterator() {
+    fn test_iterator_offset() {
         let mut s = get_stream_with_data();
-        for row in s.into_iter() {
-
+        let mut i = 0;
+        for row in s.into_iter().offset(9) {
+            i = i + 1;
         }
+        assert_eq!(i, 1);
     }
 }
