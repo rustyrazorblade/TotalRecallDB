@@ -4,6 +4,7 @@ use std::error;
 use super::row::{Row, RowError};
 use super::schema::{Schema, Type};
 use super::value::Value;
+pub use super::row_builder::RowBuilder;
 
 #[derive(Debug)]
 pub enum StreamError {
@@ -19,23 +20,7 @@ impl From<RowError> for StreamError {
 
 }
 
-pub struct RowBuilder {
-    data: HashMap<String, Value>,
-}
 
-impl RowBuilder {
-    fn new() -> RowBuilder {
-        RowBuilder{data:HashMap::new()}
-    }
-    fn set_string(&mut self, key: &str, val: &str) -> &mut RowBuilder {
-        self.data.insert(key.to_string(), Value::from(val));
-        self
-    }
-    fn set_int(&mut self, key: &str, val: i64) -> &mut RowBuilder {
-        self.data.insert(key.to_string(), Value::from(val));
-        self
-    }
-}
 
 #[derive(Debug)]
 pub struct Stream {
@@ -134,8 +119,9 @@ impl<'a> Iterator for StreamIterator<'a> {
 #[cfg(test)]
 mod tests {
     use super::{Stream, RowBuilder};
-    use super::super::schema::{Schema, Type};
-    use super::super::value::Value;
+
+    use db::schema::{Schema, Type};
+    use db::value::Value;
     use std::collections::HashMap;
 
     fn get_stream() -> Stream {
@@ -144,7 +130,16 @@ mod tests {
         s.schema.add_type("age", Type::Int);
         s.schema.add_type("created", Type::Timestamp);
         s
+    }
 
+    fn get_stream_with_data() -> Stream {
+        let mut s = get_stream();
+        for x in 0..5 {
+            let mut row = RowBuilder::new();
+            row.set_string("name", "test");
+            let result = s.insert(row).unwrap();
+        }
+        s
     }
 
     #[test]
@@ -184,7 +179,10 @@ mod tests {
             c += 1;
         }
         assert_eq!(c, 1);
-//        let r = s.next().unwrap();
+    }
+
+    #[test]
+    fn test_iterator() {
 
     }
 }
