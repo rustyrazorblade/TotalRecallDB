@@ -134,9 +134,10 @@ mod tests {
 
     fn get_stream_with_data() -> Stream {
         let mut s = get_stream();
-        for x in 0..5 {
+        for x in 0..100000 {
             let mut row = RowBuilder::new();
             row.set_string("name", "test");
+            row.set_int("age", x);
             let result = s.insert(row).unwrap();
         }
         s
@@ -183,6 +184,9 @@ mod tests {
 
     #[test]
     fn test_iterator() {
+        let mut s = get_stream_with_data();
+        for row in s.into_iter() {
 
+        }
     }
 }
