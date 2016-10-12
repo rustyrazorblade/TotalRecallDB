@@ -134,10 +134,16 @@ mod tests {
 
     fn get_stream_with_data() -> Stream {
         let mut s = get_stream();
+
+        let names = vec!["Jon", "Dani", "Pete", "Sammy", "Steph",
+                         "Blake", "Mr. Robot", "Ted", "Rachel", "Gloria"];
+        let ages = vec![35, 29, 45, 56, 100,
+                        35, 78, 32, 32, 67];
+
         for x in 0..10 {
             let mut row = RowBuilder::new();
-            row.set_string("name", "test");
-            row.set_int("age", x);
+            row.set_string("name", names[x]);
+            row.set_int("age", ages[x]);
             let result = s.insert(row).unwrap();
         }
         s
@@ -167,7 +173,7 @@ mod tests {
     }
 
     #[test]
-    fn test_builder() {
+    fn test_builder_insertion() {
         let mut s = get_stream();
         let mut row = RowBuilder::new();
 
@@ -190,5 +196,10 @@ mod tests {
             i = i + 1;
         }
         assert_eq!(i, 1);
+    }
+
+    #[test]
+    fn test_chaining() {
+
     }
 }
