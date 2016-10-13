@@ -202,9 +202,9 @@ mod tests {
     fn test_chaining() {
         let mut s = get_stream_with_data();
         // SELECT * from X where age > 25
-        for row in s.into_iter().filter(|x| x["age"] > 25)  {
-
-        }
+//        for row in s.into_iter().filter(|x| x["age"] > 25)  {
+//
+//        }
 
     }
 }

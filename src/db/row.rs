@@ -44,4 +44,11 @@ mod tests {
     use std::collections::HashMap;
     use super::super::value::Value;
     use super::*;
+
+    #[test]
+    fn test_indexing() {
+        let mut fields = HashMap::new();
+        fields.insert(0, Value::from("test"));
+        let r = Row::new(fields);
+    }
 }
