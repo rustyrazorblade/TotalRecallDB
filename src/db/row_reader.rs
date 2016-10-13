@@ -15,8 +15,9 @@ mod tests {
     fn test_row_reader_simple() {
         let mut row = RowBuilder::new();
         let mut stream = Stream::new();
-        stream.insert(row);
-
+        row.set_int("age", 1);
+        let id = stream.insert(row);
+        let result = stream.get(0);
     }
 
 }

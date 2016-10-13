@@ -1,4 +1,6 @@
 #![feature(plugin)]
+#![feature(test)]
+
 #![plugin(peg_syntax_ext)]
 
 mod db;

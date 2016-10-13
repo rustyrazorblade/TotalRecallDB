@@ -77,7 +77,7 @@ impl Stream {
         Ok(row_id)
     }
 
-    fn get(&self, position: u64) -> Option<&Row> {
+    pub fn get(&self, position: u64) -> Option<&Row> {
         self.rows.get(&position)
     }
 
@@ -118,11 +118,14 @@ impl<'a> Iterator for StreamIterator<'a> {
 
 #[cfg(test)]
 mod tests {
+    #![feature(test)]
+    extern crate test;
     use super::{Stream, RowBuilder};
 
     use db::schema::{Schema, Type};
     use db::value::Value;
     use std::collections::HashMap;
+    use self::test::Bencher;
 
     fn get_stream() -> Stream {
         let mut s = Stream::new();
@@ -207,4 +210,10 @@ mod tests {
 //        }
 
     }
+
+    #[bench]
+    fn bench_add_two(b: &mut Bencher) {
+        b.iter(|| 2 + 2);
+    }
+
 }
