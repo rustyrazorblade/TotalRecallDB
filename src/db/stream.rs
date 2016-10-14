@@ -28,7 +28,7 @@ pub struct Stream {
     lowest_id: Option<u64>,  // lowest id we still have in the Stream
     ttl: Option<u64>,
     rows: HashMap<u64, Row>,
-    schema: Schema,
+    pub schema: Schema,
 
 }
 
