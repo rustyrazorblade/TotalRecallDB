@@ -218,7 +218,13 @@ mod tests {
 
     #[bench]
     fn bench_add_two(b: &mut Bencher) {
-        b.iter(|| 2 + 2);
+        let mut stream = get_stream();
+        b.iter(|| {
+            let mut row = RowBuilder::new();
+            row.set_string("name", "Dani");
+            row.set_int("num_tacos", 4);
+            stream.insert(row);
+        });
     }
 
 }

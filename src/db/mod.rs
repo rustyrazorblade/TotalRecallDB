@@ -1,5 +1,3 @@
-#![feature(test)]
-
 
 pub mod database;
 pub mod stream;
