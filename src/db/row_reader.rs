@@ -8,11 +8,15 @@ pub struct RowReader<'a> {
 }
 
 impl<'a> RowReader<'a> {
-    fn new(schema: &'a Schema, row: &'a Row) -> RowReader<'a> {
+    pub fn new(schema: &'a Schema, row: &'a Row) -> RowReader<'a> {
         RowReader{schema: schema, row: row}
     }
-    fn get(&self, name: &str) -> Option<Value> {
-        None
+    pub fn get(&self, name: &str) -> Option<&Value> {
+
+        let result = self.schema.get(name).and_then(
+            |field| self.row.get(field.id)
+        );
+        result
     }
 }
 
@@ -34,10 +38,6 @@ mod tests {
 
         // TODO make stream.get return the RowReader
         let result = stream.get(0).unwrap();
-        {
-            let reader = RowReader::new(&stream.schema, &result);
-            let name = reader.get("name");
-        }
     }
 
 }

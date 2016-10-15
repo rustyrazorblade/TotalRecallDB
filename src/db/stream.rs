@@ -5,6 +5,7 @@ use super::row::{Row, RowError};
 use super::schema::{Schema, Type};
 use super::value::Value;
 pub use super::row_builder::RowBuilder;
+pub use super::row_reader::RowReader;
 
 #[derive(Debug)]
 pub enum StreamError {
@@ -77,15 +78,19 @@ impl Stream {
         Ok(row_id)
     }
 
-    pub fn get(&self, position: u64) -> Option<&Row> {
-        self.rows.get(&position)
+    pub fn get(&self, position: u64) -> Option<RowReader> {
+        if let Some(tmp) = self.rows.get(&position) {
+            return Some(RowReader::new(&self.schema, &tmp));
+        }
+        None
+
     }
 
 
 }
 
 impl<'a> IntoIterator for &'a Stream {
-    type Item = &'a Row;
+    type Item = RowReader<'a>;
     type IntoIter = StreamIterator<'a>;
 
     fn into_iter(self) -> Self::IntoIter {
@@ -108,8 +113,8 @@ impl<'a> StreamIterator<'a> {
 }
 
 impl<'a> Iterator for StreamIterator<'a> {
-    type Item = &'a Row;
-    fn next(&mut self) -> Option<&'a Row> {
+    type Item = RowReader<'a>;
+    fn next(&mut self) -> Option<RowReader<'a>> {
         let tmp = self.stream.get(self.position);
         self.position = self.position + 1;
         tmp
@@ -163,9 +168,9 @@ mod tests {
         assert_eq!(result, 0);
         assert_eq!(s.inserts, 1);
         let row2 = s.get(result).unwrap();
-        let name = row2.get(name_id).unwrap();
+        let name = row2.get("name").unwrap();
         // was the data inserted?
-        assert_eq!(row2.get(name_id).unwrap().clone(),
+        assert_eq!(*row2.get("name").unwrap(),
                    Value::from("test"));
 
     }
