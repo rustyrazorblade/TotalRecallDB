@@ -1,0 +1,12 @@
+use super::*;
+
+#[pub]
+statement -> Statement
+    = insert_statement
+
+insert_statement -> Statement
+    = {
+        Statement::Insert(InsertStatement::new(String::from("test")))
+        }
+
+

@@ -7,3 +7,4 @@ pub mod schema;
 pub mod value;
 pub mod row_builder;
 pub mod row_reader;
+pub mod parser;

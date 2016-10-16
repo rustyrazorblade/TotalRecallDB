@@ -4,5 +4,5 @@ version = "0.1.0"
 authors = ["Jon Haddad <jon@jonhaddad.com>"]
 
 [dependencies]
-peg = "0.3.0"
+peg = "0.3.16"
 byteorder = "0.5.3"
