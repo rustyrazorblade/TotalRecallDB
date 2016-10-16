@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use super::stream::Stream;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum DatabaseError {
     TableExists,
 }
@@ -21,11 +21,14 @@ impl Database {
 
     fn create_stream(&mut self, name: &str) -> Result<(), DatabaseError> {
         let tmp = Stream::new();
+        if self.tables.contains_key(name) {
+            return Err(DatabaseError::TableExists);
+        }
         self.tables.insert(name.to_string(), tmp);
         Ok(())
     }
 
-    fn get_table_mut(&mut self, name: &str) -> Option<&mut Stream> {
+    fn get_stream_mut(&mut self, name: &str) -> Option<&mut Stream> {
         self.tables.get_mut(name)
     }
 }
@@ -33,13 +36,14 @@ impl Database {
 #[cfg(test)]
 mod tests {
     use super::Database;
+    use super::DatabaseError;
 
     // returns a valid DB for use with testing with valid simple schema
-    fn get_db_with_stream() {
+    fn get_db_with_stream() -> Database {
         let mut db = Database::new();
         db.create_stream("Jon");
 
-
+        db
     }
 
     #[test]
@@ -48,4 +52,14 @@ mod tests {
         db.create_stream("Jon");
     }
 
+    #[test]
+    fn create_table_fails_when_table_exists() {
+        let mut db = get_db_with_stream();
+        if let Err(result) = db.create_stream("Jon") {
+            assert_eq!(result, DatabaseError::TableExists);
+        } else {
+            panic!("Was expecting DatabaseError::TableExists, got an OK");
+        }
+
+    }
 }
