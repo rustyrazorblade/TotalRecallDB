@@ -30,7 +30,10 @@ field_value_list -> RowBuilder
 field_equals_value -> (String, Value)
     = f:field __ equals __ v:value { (f, v) }
 
-
+#[pub]
+string -> String
+    = ([^\"] / "\"")*
+    { String::from(match_str) }
 
 equals = "="
 
