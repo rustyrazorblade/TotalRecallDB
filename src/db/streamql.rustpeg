@@ -15,6 +15,12 @@ insert = "insert"i
 table -> String
     = [a-zA-Z_]+  { match_str.to_string() }
 
+equals = "="
+
+#[pub]
+field -> String
+    = [a-zA-Z_]+  { match_str.to_string() }
+
 
 into = __ "into"i __
 
