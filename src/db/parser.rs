@@ -45,7 +45,12 @@ mod tests {
         } else {
             panic!("")
         }
+        let x = "INSERT INTO test set k=1, v=2;";
+        let result = parse_statement(x).unwrap();
     }
+
+    #[test]
+
 
     #[test]
     fn test_int_parsing() {
