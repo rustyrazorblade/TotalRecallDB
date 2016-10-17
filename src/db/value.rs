@@ -1,7 +1,7 @@
 extern crate byteorder;
 
 use std::io::Cursor;
-use self::byteorder::{ReadBytesExt, WriteBytesExt, BigEndian, LittleEndian};
+use self::byteorder::{ReadBytesExt, WriteBytesExt, LittleEndian};
 
 
 #[derive(Debug, Clone, PartialEq)]
@@ -9,10 +9,17 @@ pub struct Value {
     data: Vec<u8>
 }
 
+impl Value {
+    fn to_int(&self) -> i64 {
+        let mut cur = Cursor::new(self.data.clone());
+        cur.read_i64::<LittleEndian>().unwrap()
+    }
+}
+
 impl From<i64> for Value {
     fn from(val: i64) -> Value {
         let mut buffer = Vec::new();
-        buffer.write_i64::<BigEndian>(val).unwrap();
+        buffer.write_i64::<LittleEndian>(val).unwrap();
         Value { data: buffer }
     }
 }
@@ -43,6 +50,13 @@ mod tests {
 
         y = Value::from(2);
         assert!(x != y);
+    }
+
+    #[test]
+    fn int_converts_back_ok() {
+        let x = Value::from(1);
+        let y = x.to_int();
+        assert_eq!(1, y);
     }
 
     #[test]
