@@ -4,15 +4,16 @@ use super::*;
 statement -> Statement
     = insert_statement
 
+
 insert_statement -> Statement
-    = "insert"i into table:table set
+    = insert __ into __ table:table __ set
     { Statement::Insert(InsertStatement::new(table)) }
 
-set
-    = "set"i
+set = "set"i
+insert = "insert"i
 
 table -> String
-    = [a-zA-Z_]+ __  { match_str.to_string() }
+    = [a-zA-Z_]+  { match_str.to_string() }
 
 
 into = __ "into"i __

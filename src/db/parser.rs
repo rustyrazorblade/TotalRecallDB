@@ -9,6 +9,11 @@ fn parse_statement(query: &str) -> Result<Statement, ParseError> {
 #[derive(Debug)]
 pub enum Statement {
     Insert(InsertStatement),
+    CreateStream,
+    DropStream,
+    UseDatabase,
+    Select,
+    Subscribe,
 }
 
 
@@ -28,10 +33,19 @@ impl InsertStatement {
 #[cfg(test)]
 mod tests {
     use super::parse_statement;
+    use super::Statement;
+
     #[test]
-    fn test_basic_inserts() {
-        let result = parse_statement("INSERT INTO test set k=1");
-        assert!(result.is_ok());
+    fn test_basic_insert() {
+        let result = parse_statement("INSERT INTO test set k=1").unwrap();
+
+        if let Statement::Insert(x) = result {
+            assert_eq!(x.stream, String::from("test"));
+        } else {
+            panic!("")
+        }
+
+
     }
 
 }
