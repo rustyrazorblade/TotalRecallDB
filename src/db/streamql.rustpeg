@@ -31,6 +31,10 @@ field_equals_value -> (String, Value)
     = f:field __ equals __ v:value { (f, v) }
 
 #[pub]
+quoted_string -> String
+    = '"' s:string '"' {s}
+
+#[pub]
 string -> String
     = ([^\"] / "\"")*
     { String::from(match_str) }
