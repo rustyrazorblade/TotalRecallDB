@@ -44,4 +44,13 @@ mod tests {
         y = Value::from(2);
         assert!(x != y);
     }
+
+    #[test]
+    fn string_equality() {
+        let x = Value::from("test");
+        let y = Value::from("test");
+        assert_eq!(x, y);
+        let y = Value::from("test2");
+        assert!(x != y);
+    }
 }
