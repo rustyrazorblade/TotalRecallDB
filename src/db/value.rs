@@ -31,3 +31,17 @@ impl<'a> From<&'a str> for Value {
         Value{data:v}
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::Value;
+    #[test]
+    fn ints_should_compare_equal() {
+        let mut x = Value::from(1);
+        let mut y = Value::from(1);
+        assert_eq!(x, y);
+
+        y = Value::from(2);
+        assert!(x != y);
+    }
+}
