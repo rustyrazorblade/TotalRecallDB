@@ -14,6 +14,9 @@ impl Value {
         let mut cur = Cursor::new(self.data.clone());
         cur.read_i64::<LittleEndian>().unwrap()
     }
+    fn to_string(&self) -> String {
+        String::from_utf8(self.data.clone()).unwrap()
+    }
 }
 
 impl From<i64> for Value {
@@ -66,5 +69,12 @@ mod tests {
         assert_eq!(x, y);
         let y = Value::from("test2");
         assert!(x != y);
+    }
+
+    #[test]
+    fn string_conversions() {
+        let tmp = Value::from("this is a test");
+        let x = tmp.to_string();
+        assert_eq!(x, "this is a test");
     }
 }
