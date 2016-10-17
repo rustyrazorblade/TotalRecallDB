@@ -38,7 +38,7 @@ mod tests {
 
     #[test]
     fn test_basic_insert() {
-        let result = parse_statement("INSERT INTO test set k=1").unwrap();
+        let result = parse_statement("INSERT INTO test set k=1;").unwrap();
 
         if let Statement::Insert(x) = result {
             assert_eq!(x.stream, String::from("test"));

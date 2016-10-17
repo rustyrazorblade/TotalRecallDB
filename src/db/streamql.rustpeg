@@ -1,5 +1,6 @@
 use super::*;
 use db::value::Value;
+use db::row_builder::RowBuilder;
 
 #[pub]
 statement -> Statement
@@ -7,7 +8,7 @@ statement -> Statement
 
 
 insert_statement -> Statement
-    = insert __ into __ table:table __ set
+    = insert __ into __ table:table __ set __ field_value_list __ ";"
     { Statement::Insert(InsertStatement::new(table)) }
 
 set = "set"i
@@ -15,6 +16,21 @@ insert = "insert"i
 
 table -> String
     = [a-zA-Z_]+  { match_str.to_string() }
+
+#[pub]
+field_value_list -> RowBuilder
+    = (__ field_equals_value __) ++ ","
+    {
+        let r = RowBuilder::new();
+        r
+    }
+
+
+#[pub]
+field_equals_value -> (String, Value)
+    = f:field __ equals __ v:value { (f, v) }
+
+
 
 equals = "="
 
