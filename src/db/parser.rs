@@ -34,6 +34,7 @@ impl InsertStatement {
 mod tests {
     use super::parse_statement;
     use super::Statement;
+    use super::streamql::int_value;
 
     #[test]
     fn test_basic_insert() {
@@ -48,6 +49,13 @@ mod tests {
 
     }
 
+    #[test]
+    fn test_int_parsing() {
+        let tmp = int_value("42").unwrap();
+        
+
+    }
 }
+
 
 

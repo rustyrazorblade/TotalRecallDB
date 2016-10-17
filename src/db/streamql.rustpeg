@@ -1,4 +1,5 @@
 use super::*;
+use db::value::Value;
 
 #[pub]
 statement -> Statement
@@ -21,6 +22,16 @@ equals = "="
 field -> String
     = [a-zA-Z_]+  { match_str.to_string() }
 
+#[pub]
+value -> Value
+    = int_value
+
+#[pub]
+int_value -> Value
+    = int:int { Value::from(int) }
+
+int -> i64
+    = "-"? [0-9]+ { match_str.parse().unwrap() }
 
 into = __ "into"i __
 
