@@ -5,8 +5,11 @@ statement -> Statement
     = insert_statement
 
 insert_statement -> Statement
-    = "insert"i into table:table
+    = "insert"i into table:table set
     { Statement::Insert(InsertStatement::new(table)) }
+
+set
+    = "set"i
 
 table -> String
     = [a-zA-Z_]+ __  { match_str.to_string() }
