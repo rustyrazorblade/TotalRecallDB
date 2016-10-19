@@ -19,16 +19,19 @@ table -> String
 
 #[pub]
 field_value_list -> RowBuilder
-    = (__ field_equals_value __) ++ ","
+    = s:field_equals_value  ++ ","
     {
-        let r = RowBuilder::new();
+        let mut r = RowBuilder::new();
+        for (k, v) in s.into_iter() {
+            r.set(&k, v);
+        }
         r
     }
 
 
 #[pub]
 field_equals_value -> (String, Value)
-    = f:field __ equals __ v:value { (f, v) }
+    = __ f:field __ equals __ v:value __ { (f, v) }
 
 #[pub]
 quoted_string -> String

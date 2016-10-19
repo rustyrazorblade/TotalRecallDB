@@ -18,4 +18,9 @@ impl RowBuilder {
         self.data.insert(key.to_string(), Value::from(val));
         self
     }
+    pub fn set(&mut self, key: &str, val: Value) -> &mut RowBuilder {
+        self.data.insert(key.to_string(), val);
+        self
+
+    }
 }
