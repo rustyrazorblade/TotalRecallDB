@@ -1,4 +1,4 @@
-extern crate db;
+extern crate streamyourfaceoffdb;
 
 use db::parse_statement;
 use db::parser::Statement;
