@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use super::value::Value;
 
+#[derive(Debug)]
 pub struct RowBuilder {
     pub data: HashMap<String, Value>,
 }

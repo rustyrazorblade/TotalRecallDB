@@ -8,8 +8,8 @@ statement -> Statement
 
 
 insert_statement -> Statement
-    = insert __ into __ table:table __ set __ field_value_list __ ";"
-    { Statement::Insert(InsertStatement::new(table)) }
+    = insert __ into __ table:table __ set __ row_builder:field_value_list __ ";"
+    { Statement::Insert(table, row_builder) }
 
 set = "set"i
 insert = "insert"i
