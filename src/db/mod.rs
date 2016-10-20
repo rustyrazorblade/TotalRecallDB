@@ -10,3 +10,5 @@ pub mod row_reader;
 pub mod parser;
 
 mod tests;
+
+use self::database::Database;

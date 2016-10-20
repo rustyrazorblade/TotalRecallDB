@@ -19,17 +19,22 @@ impl Database {
         }
     }
 
-    fn create_stream(&mut self, name: &str) -> Result<(), DatabaseError> {
+    pub fn create_stream(&mut self, name: &str) -> Result<&mut Stream, DatabaseError> {
         let tmp = Stream::new();
         if self.tables.contains_key(name) {
             return Err(DatabaseError::TableExists);
         }
         self.tables.insert(name.to_string(), tmp);
-        Ok(())
+        let stream = self.tables.get_mut(name).unwrap();
+        Ok(stream)
     }
 
     fn get_stream_mut(&mut self, name: &str) -> Option<&mut Stream> {
         self.tables.get_mut(name)
+    }
+
+    pub fn execute(&mut self, query: &str) {
+
     }
 }
 
