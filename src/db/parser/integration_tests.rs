@@ -9,5 +9,5 @@ fn real_db_insert_parsing() {
         stream.schema.add_type("name", Type::String);
     }
     let q= r#"INSERT INTO users set name="Jon";"#;
-    db.execute(q);
+    let result = db.execute(q);
 }

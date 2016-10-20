@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use super::stream::Stream;
+use super::stream::{Stream, StreamError};
 use super::parser::{parse_statement, Statement, ParseError};
 use super::row_builder::RowBuilder;
 
@@ -20,6 +20,11 @@ pub enum QueryResult {
 impl From<ParseError> for DatabaseError {
     fn from(err: ParseError) -> DatabaseError {
         DatabaseError::QueryParseError
+    }
+}
+impl From<StreamError> for DatabaseError {
+    fn from(err: StreamError) -> DatabaseError {
+        DatabaseError::UnknownError
     }
 }
 
@@ -54,16 +59,16 @@ impl Database {
 
         let result = match tmp {
             Statement::Insert(stream, row_builder) =>
-                self.insert(&stream, &row_builder),
+                self.insert(&stream, row_builder),
             _ => Err(DatabaseError::UnknownError)
         };
         result
     }
 
-    pub fn insert(&mut self, stream: &str, row_builder: &RowBuilder) -> Result<QueryResult, DatabaseError> {
+    pub fn insert(&mut self, stream: &str, row_builder: RowBuilder) -> Result<QueryResult, DatabaseError> {
         let stream = try!(self.get_stream_mut(stream).ok_or(DatabaseError::StreamNotFound));
-
-        Ok(QueryResult::Insert(0))
+        let id = try!(stream.insert(row_builder));
+        Ok(QueryResult::Insert(id))
     }
 
 }
