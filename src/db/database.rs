@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use super::stream::Stream;
 use super::parser::{parse_statement, Statement, ParseError};
-
+use super::row_builder::RowBuilder;
 
 #[derive(Debug, PartialEq)]
 pub enum DatabaseError {
@@ -12,6 +12,7 @@ pub enum DatabaseError {
 #[derive(Debug)]
 pub enum QueryResult {
     ResultSet,
+    Insert(u64),
 }
 
 impl From<ParseError> for DatabaseError {
@@ -48,9 +49,19 @@ impl Database {
 
     pub fn execute(&mut self, query: &str) -> Result<QueryResult, DatabaseError> {
         let tmp = try!(parse_statement(query));
-        let result = QueryResult::ResultSet;
-        Ok(result)
+
+        let result = match tmp {
+            Statement::Insert(stream, row_builder) =>
+                self.insert(&stream, &row_builder),
+            _ => Ok(QueryResult::ResultSet)
+        };
+        result
     }
+
+    pub fn insert(&mut self, query: &str, row_builder: &RowBuilder) -> Result<QueryResult, DatabaseError> {
+        Ok(QueryResult::Insert(0))
+    }
+
 }
 
 #[cfg(test)]
