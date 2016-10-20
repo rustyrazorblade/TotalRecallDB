@@ -7,6 +7,8 @@ use super::row_builder::RowBuilder;
 pub enum DatabaseError {
     TableExists,
     QueryParseError,
+    UnknownError,
+    StreamNotFound,
 }
 
 #[derive(Debug)]
@@ -53,12 +55,14 @@ impl Database {
         let result = match tmp {
             Statement::Insert(stream, row_builder) =>
                 self.insert(&stream, &row_builder),
-            _ => Ok(QueryResult::ResultSet)
+            _ => Err(DatabaseError::UnknownError)
         };
         result
     }
 
-    pub fn insert(&mut self, query: &str, row_builder: &RowBuilder) -> Result<QueryResult, DatabaseError> {
+    pub fn insert(&mut self, stream: &str, row_builder: &RowBuilder) -> Result<QueryResult, DatabaseError> {
+        let stream = try!(self.get_stream_mut(stream).ok_or(DatabaseError::StreamNotFound));
+
         Ok(QueryResult::Insert(0))
     }
 
