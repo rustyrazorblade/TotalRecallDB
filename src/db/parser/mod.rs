@@ -1,13 +1,12 @@
 peg_file! streamql("streamql.rustpeg");
 
-use self::streamql::{statement, ParseError};
+use self::streamql::statement;
+pub use self::streamql::ParseError;
 use super::row_builder::RowBuilder;
 
 mod integration_tests;
 
-
-
-fn parse_statement(query: &str) -> Result<Statement, ParseError> {
+pub fn parse_statement(query: &str) -> Result<Statement, ParseError> {
     statement(query)
 }
 

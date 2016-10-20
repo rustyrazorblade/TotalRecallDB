@@ -1,11 +1,24 @@
 use std::collections::HashMap;
 use super::stream::Stream;
+use super::parser::{parse_statement, Statement, ParseError};
+
 
 #[derive(Debug, PartialEq)]
 pub enum DatabaseError {
     TableExists,
+    QueryParseError,
 }
 
+#[derive(Debug)]
+pub enum QueryResult {
+    ResultSet,
+}
+
+impl From<ParseError> for DatabaseError {
+    fn from(err: ParseError) -> DatabaseError {
+        DatabaseError::QueryParseError
+    }
+}
 
 
 pub struct Database {
@@ -33,8 +46,10 @@ impl Database {
         self.tables.get_mut(name)
     }
 
-    pub fn execute(&mut self, query: &str) {
-
+    pub fn execute(&mut self, query: &str) -> Result<QueryResult, DatabaseError> {
+        let tmp = try!(parse_statement(query));
+        let result = QueryResult::ResultSet;
+        Ok(result)
     }
 }
 
