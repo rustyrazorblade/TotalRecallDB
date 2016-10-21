@@ -4,8 +4,13 @@ use db::row_builder::RowBuilder;
 
 #[pub]
 statement -> Statement
-    = insert_statement
+    = insert_statement / define_stream
 
+define_stream -> Statement
+    = define __ stream
+    {
+        Statement::DefineStream
+    }
 
 insert_statement -> Statement
     = insert __ into __ table:table __ set __ row_builder:field_value_list __ ";"
@@ -43,6 +48,7 @@ string -> String
     { String::from(match_str) }
 
 equals = "="
+stream = "stream"i
 
 #[pub]
 field -> String
@@ -55,6 +61,8 @@ value -> Value
 #[pub]
 int_value -> Value
     = int:int { Value::from(int) }
+
+define = "define"
 
 int -> i64
     = "-"? [0-9]+ { match_str.parse().unwrap() }

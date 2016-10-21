@@ -14,7 +14,7 @@ pub fn parse_statement(query: &str) -> Result<Statement, ParseError> {
 pub enum Statement {
     // Stream & Keys
     Insert(String, RowBuilder),
-    CreateStream,
+    DefineStream,
     DropStream,
     UseDatabase,
     Select,
