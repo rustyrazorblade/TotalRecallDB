@@ -6,3 +6,4 @@ authors = ["Jon Haddad <jon@jonhaddad.com>"]
 [dependencies]
 peg = "0.3.16"
 byteorder = "0.5.3"
+nom = "^1.2.4"

@@ -1,3 +1,4 @@
+extern crate nom;
 
 pub mod database;
 pub mod stream;
