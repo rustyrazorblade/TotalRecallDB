@@ -1,6 +1,3 @@
-#[macro_use]
-
-
 use self::streamql::statement;
 pub use self::streamql::ParseError;
 use super::row_builder::RowBuilder;
