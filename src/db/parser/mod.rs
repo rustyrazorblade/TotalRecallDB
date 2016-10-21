@@ -26,6 +26,7 @@ mod test {
     use super::parse_statement;
     use super::Statement;
     use super::streamql::*;
+
     #[test]
     fn test_basic_insert() {
 
