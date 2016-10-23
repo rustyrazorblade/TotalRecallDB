@@ -1,6 +1,7 @@
 use self::streamql::statement;
 pub use self::streamql::ParseError;
 use super::row_builder::RowBuilder;
+use super::schema::Type;
 
 mod integration_tests;
 
@@ -27,10 +28,6 @@ pub enum Statement {
     Select,
     Subscribe,
 }
-
-
-
-
 
 
 #[cfg(test)]

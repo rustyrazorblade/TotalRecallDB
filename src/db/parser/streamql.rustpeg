@@ -1,6 +1,7 @@
 use super::Statement;
 use db::value::Value;
 use db::row_builder::RowBuilder;
+use db::schema::TypeDef;
 
 #[pub]
 statement -> Statement
