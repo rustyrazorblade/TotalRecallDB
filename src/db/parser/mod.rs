@@ -51,6 +51,14 @@ mod test {
         }
         let x = "INSERT INTO test set k=1, v=2;";
         let result = parse_statement(x).unwrap();
+
+    }
+
+    #[test]
+    fn test_parsing_with_quoted_string() {
+        let result = parse_statement("INSERT INTO test set k='test';").unwrap();
+        let result = parse_statement("INSERT INTO test set k='test my ''friend''';").unwrap();
+
     }
 
     #[test]
