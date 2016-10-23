@@ -30,12 +30,12 @@ fn test_quoted_string_insert() {
     let mut db = Database::new();
     {
         let mut stream = db.create_stream("users").unwrap();
-        stream.schema.add_type("age", Type::String);
+        stream.schema.add_type("name", Type::String);
     }
 
     let q= "INSERT INTO users set name='Jon';";
     if let QueryResult::Insert(result) = db.execute(q).unwrap() {
-        assert_eq!(result, 1);
+        assert_eq!(result, 0);
     } else {
         panic!("Everything on fire");
     }
