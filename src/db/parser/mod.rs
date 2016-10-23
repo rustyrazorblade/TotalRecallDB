@@ -37,6 +37,7 @@ mod test {
     use super::parse_statement;
     use super::Statement;
     use super::streamql::*;
+    use db::value::Value;
 
     #[test]
     fn test_basic_insert() {
@@ -60,9 +61,28 @@ mod test {
     #[test]
     fn test_basic_string_parsing() {
         string("hello this is a test").unwrap();
-        let x = string(r#"hello this is a \"test\""#).unwrap();
-        assert!(x.starts_with("hello this is a"));
-        panic!(x);
+    }
+
+    #[test]
+    fn test_escaped_string() {
+        let x = string("hello this is a ''test''").unwrap();
+        assert_eq!(x, "hello this is a 'test'");
+    }
+
+    #[test]
+    fn test_quoted_string() {
+        let x = "'it''s mine'";
+        let p = quoted_string(x).unwrap();
+        assert_eq!(p, "it's mine");
+    }
+
+    #[test]
+    fn value_string_parsing() {
+        let x = "'hello'";
+        if Value::from(x) == value(x).unwrap() {
+            assert_eq!(x, "hello");
+        }
+
     }
 }
 

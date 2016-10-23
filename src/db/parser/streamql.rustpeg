@@ -38,20 +38,7 @@ field_value_list -> RowBuilder
 field_equals_value -> (String, Value)
     = __ f:field __ equals __ v:value __ { (f, v) }
 
-#[pub]
-quoted_string -> String
-    = '"' s:string '"' {s}
-
-#[pub]
-string -> String
-    = ([^\"] / "\"")*
-    { String::from(match_str) }
-
-#[pub]
-escaped_quote -> String
-    = "\"" { String::from("\"") }
-
-equals = "="
+equals= "="
 stream = "stream"i
 
 #[pub]
@@ -60,11 +47,26 @@ field -> String
 
 #[pub]
 value -> Value
-    = int_value
+    = int_value / string_value
 
 #[pub]
 int_value -> Value
     = int:int { Value::from(int) }
+
+#[pub]
+string_value -> Value
+    = s:quoted_string
+    { Value::from(s) }
+
+#[pub]
+quoted_string -> String
+    = "'" s:string "'" {s}
+
+#[pub]
+string -> String
+    = ([^'] / "''")*
+    { match_str.to_string().replace("''", "'") }
+
 
 define = "define"
 
