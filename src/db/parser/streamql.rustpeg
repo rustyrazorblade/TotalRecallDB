@@ -47,6 +47,10 @@ string -> String
     = ([^\"] / "\"")*
     { String::from(match_str) }
 
+#[pub]
+escaped_quote -> String
+    = "\"" { String::from("\"") }
+
 equals = "="
 stream = "stream"i
 

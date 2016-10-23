@@ -60,7 +60,9 @@ mod test {
     #[test]
     fn test_basic_string_parsing() {
         string("hello this is a test").unwrap();
-        string(r#"hello this is a \"test\""#).unwrap();
+        let x = string(r#"hello this is a \"test\""#).unwrap();
+        assert!(x.starts_with("hello this is a"));
+        panic!(x);
     }
 }
 
