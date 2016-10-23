@@ -4,12 +4,12 @@ use db::row_builder::RowBuilder;
 
 #[pub]
 statement -> Statement
-    = insert_statement / define_stream
+    = insert_statement / declare_stream
 
-define_stream -> Statement
-    = define __ stream
+declare_stream -> Statement
+    = declare __ stream
     {
-        Statement::DefineStream
+        Statement::DeclareStream
     }
 
 insert_statement -> Statement
@@ -68,7 +68,7 @@ string -> String
     { match_str.to_string().replace("''", "'") }
 
 
-define = "define"
+declare = "declare"
 
 int -> i64
     = "-"? [0-9]+ { match_str.parse().unwrap() }
