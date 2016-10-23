@@ -7,11 +7,12 @@ statement -> Statement
     = insert_statement / declare_stream
 
 declare_stream -> Statement
-    = declare  stream  as?
+    = declare  stream name:table_name as?
     lparen
+    column_spec
     rparen
     {
-        Statement::DeclareStream
+        Statement::DeclareStream(name)
     }
 
 insert_statement -> Statement
@@ -36,6 +37,9 @@ field_value_list -> RowBuilder
         r
     }
 
+#[pub]
+column_spec
+    = {}
 
 #[pub]
 field_equals_value -> (String, Value)
@@ -46,6 +50,10 @@ stream = "stream"i __
 
 #[pub]
 field -> String
+    = [a-zA-Z_]+  { match_str.to_string() }
+
+#[pub]
+table_name -> String
     = [a-zA-Z_]+  { match_str.to_string() }
 
 #[pub]
@@ -93,3 +101,4 @@ eol
   / "\r"
   / "\u{2028}"
   / "\u{2029}"
+

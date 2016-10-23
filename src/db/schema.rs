@@ -13,6 +13,7 @@ pub enum Type {
 
 #[derive(Debug)]
 pub struct TypeDef {
+    // id to be used in the on disk serialization
     pub id: u8,
     dbtype: Type,
 }

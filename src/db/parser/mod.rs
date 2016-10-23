@@ -20,7 +20,8 @@ pub fn parse_statement(query: &str) -> Result<Statement, ParseError> {
 pub enum Statement {
     // Stream & Keys
     Insert(String, RowBuilder),
-    DeclareStream,
+    // name
+    DeclareStream(String),
     DropStream,
     UseDatabase,
     Select,
@@ -97,6 +98,16 @@ mod test {
     fn declare_stream_parsing() {
         let x = "declare stream readings ( ts int, val int, s text );";
         let p = parse_statement(x).unwrap();
+    }
+
+    #[test]
+    fn test_basic_parse_column_specification() {
+        let x = "ts int";
+        let p = parse_statement(x).unwrap();
+
+        let x = "ts text";
+        let p = parse_statement(x).unwrap();
+
     }
 }
 
