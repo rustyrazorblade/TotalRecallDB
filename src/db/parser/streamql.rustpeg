@@ -7,7 +7,9 @@ statement -> Statement
     = insert_statement / declare_stream
 
 declare_stream -> Statement
-    = declare  stream  as
+    = declare  stream  as?
+    lparen
+    rparen
     {
         Statement::DeclareStream
     }
@@ -73,6 +75,10 @@ declare = "declare" __
 
 int -> i64
     = "-"? [0-9]+ { match_str.parse().unwrap() }
+
+lparen = "(" __
+rparen = ")" __
+
 
 into = "into"i __
 

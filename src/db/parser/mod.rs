@@ -92,6 +92,12 @@ mod test {
         }
 
     }
+
+    #[test]
+    fn declare_stream_parsing() {
+        let x = "declare stream readings ( ts int, val int, s text );";
+        let p = parse_statement(x).unwrap();
+    }
 }
 
 
