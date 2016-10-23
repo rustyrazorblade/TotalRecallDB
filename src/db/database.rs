@@ -9,6 +9,7 @@ pub enum DatabaseError {
     QueryParseError,
     UnknownError,
     StreamNotFound,
+    FieldNotFound(String),
 }
 
 #[derive(Debug)]
@@ -24,7 +25,14 @@ impl From<ParseError> for DatabaseError {
 }
 impl From<StreamError> for DatabaseError {
     fn from(err: StreamError) -> DatabaseError {
-        DatabaseError::UnknownError
+        let tmp = match err {
+            StreamError::FieldNotFound(x) =>
+                DatabaseError::FieldNotFound(x),
+            _ =>
+                DatabaseError::UnknownError
+
+        };
+        tmp
     }
 }
 

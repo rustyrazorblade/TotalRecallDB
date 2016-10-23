@@ -1,5 +1,15 @@
-use db::database::{Database, QueryResult};
+use db::database::{Database, QueryResult, DatabaseError};
 use db::schema::Type;
+
+fn get_db() -> Database {
+    let mut db = Database::new();
+    {
+        let mut stream = db.create_stream("users").unwrap();
+        stream.schema.add_type("name", Type::String);
+        stream.schema.add_type("age", Type::Int);
+    }
+    db
+}
 
 #[test]
 fn real_db_insert_parsing() {
@@ -38,6 +48,16 @@ fn test_quoted_string_insert() {
         assert_eq!(result, 0);
     } else {
         panic!("Everything on fire");
+    }
+}
+
+#[test]
+fn test_schema_validation() {
+    let mut db = get_db();
+    if let DatabaseError::FieldNotFound(x) = db.execute("insert into users set name = 'Jon', age = 35, pie=3;").unwrap_err() {
+
+    } else {
+        panic!("So much fail");
     }
 }
 
