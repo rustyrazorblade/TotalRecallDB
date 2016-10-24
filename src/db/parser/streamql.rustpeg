@@ -9,10 +9,10 @@ statement -> Statement
     = insert_statement / declare_stream
 
 declare_stream -> Statement
-    = declare  stream name:table_name as?
+    = declare  stream name:table_name __ as? __
     lparen
     specs:column_spec_list
-    rparen
+    rparen __ ";"
     {
         Statement::DeclareStream(name, specs)
     }
@@ -49,7 +49,7 @@ column_spec_list -> Vec<ColumnSpec>
 
 #[pub]
 column_spec -> ColumnSpec
-    = f:field __ t:data_type __
+    = __ f:field __ t:data_type __
     {
         ColumnSpec::new(f)
     }

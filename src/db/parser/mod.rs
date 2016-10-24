@@ -115,7 +115,12 @@ mod test {
 
         let x = "ts text";
         let p = column_spec(x).unwrap();
+    }
 
+    #[test]
+    fn test_column_spec_list() {
+        let x = "ts int, val int, s text ";
+        let p = column_spec_list(x).unwrap();
     }
 }
 
