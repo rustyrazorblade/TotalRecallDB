@@ -121,7 +121,12 @@ mod test {
     fn test_column_spec_list() {
         let x = "ts int, val int, s text ";
         let p = column_spec_list(x).unwrap();
+
         assert_eq!(p.len(), 3);
+
+        assert_eq!(p[0].name, "ts");
+        assert_eq!(p[1].name, "val");
+        assert_eq!(p[2].name, "s");
     }
 }
 
