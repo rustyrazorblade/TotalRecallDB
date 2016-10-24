@@ -42,9 +42,6 @@ field_value_list -> RowBuilder
 #[pub]
 column_spec_list -> Vec<ColumnSpec>
     = column_spec ++ ","
-    {
-        Vec::new()
-    }
 
 
 #[pub]
