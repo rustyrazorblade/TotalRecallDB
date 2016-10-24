@@ -31,13 +31,14 @@ pub enum Statement {
 
 #[derive(Debug)]
 pub struct ColumnSpec {
-    name: String,
-//    ftype: Type,
+    pub name: String,
+    pub ftype: Type,
 }
 
 impl ColumnSpec {
-    fn new(name: String) -> ColumnSpec {
-        ColumnSpec{name: name}
+    fn new(name: String, ftype: Type) -> ColumnSpec {
+        ColumnSpec{name: name,
+                   ftype: ftype}
     }
 }
 

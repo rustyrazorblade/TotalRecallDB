@@ -16,6 +16,7 @@ pub enum DatabaseError {
 pub enum QueryResult {
     ResultSet,
     Insert(u64),
+    StreamCreated,
 }
 
 impl From<ParseError> for DatabaseError {
@@ -81,8 +82,14 @@ impl Database {
         Ok(QueryResult::Insert(id))
     }
 
-    pub fn declare_stream(&mut self, stream: &str, fields: Vec<ColumnSpec>) -> Result<QueryResult, DatabaseError> {
-        Err(DatabaseError::UnknownError)
+    pub fn declare_stream(&mut self,
+                          stream: &str,
+                          fields: Vec<ColumnSpec>) -> Result<QueryResult, DatabaseError> {
+        let stream = try!(self.create_stream(stream));
+        for col_spec in fields {
+            stream.schema.add_type(&col_spec.name, col_spec.ftype);
+        }
+        Ok(QueryResult::StreamCreated)
     }
 
 }

@@ -63,5 +63,7 @@ fn test_schema_validation() {
 
 #[test]
 fn define_stream_test() {
-    let query = r#""#;
+    let mut db = get_db();
+    db.execute("declare stream data ( id int, name text, reading text);").unwrap();
+
 }

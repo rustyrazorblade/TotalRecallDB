@@ -48,7 +48,7 @@ column_spec_list -> Vec<ColumnSpec>
 column_spec -> ColumnSpec
     = __ f:field __ t:data_type __
     {
-        ColumnSpec::new(f)
+        ColumnSpec::new(f, t)
     }
 
 #[pub]
