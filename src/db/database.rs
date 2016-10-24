@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use super::stream::{Stream, StreamError};
-use super::parser::{parse_statement, Statement, ParseError};
+use super::parser::{parse_statement, Statement, ParseError, ColumnSpec};
 use super::row_builder::RowBuilder;
 
 #[derive(Debug, PartialEq)]
@@ -68,6 +68,8 @@ impl Database {
         let result = match tmp {
             Statement::Insert(stream, row_builder) =>
                 self.insert(&stream, row_builder),
+            Statement::DeclareStream(stream, fields) =>
+                self.declare_stream(&stream, fields),
             _ => Err(DatabaseError::UnknownError)
         };
         result
@@ -77,6 +79,10 @@ impl Database {
         let stream = try!(self.get_stream_mut(stream).ok_or(DatabaseError::StreamNotFound));
         let id = try!(stream.insert(row_builder));
         Ok(QueryResult::Insert(id))
+    }
+
+    pub fn declare_stream(&mut self, stream: &str, fields: Vec<ColumnSpec>) -> Result<QueryResult, DatabaseError> {
+        Err(DatabaseError::UnknownError)
     }
 
 }
