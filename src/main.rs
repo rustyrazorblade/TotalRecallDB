@@ -6,11 +6,21 @@
 #[macro_use]
 extern crate nom;
 extern crate clap;
+extern crate termion;
+
 
 mod db;
 
 use db::server::Server;
+use db::database::{Database, QueryResult};
 use clap::{Arg, App, SubCommand};
+
+use std::io::{self, Read};
+use std::io::{Write, stdout, stdin};
+
+use termion::input::TermRead;
+use termion::{color, style};
+
 
 fn main() {
     println!("Starting the worst database ever created!!");
@@ -29,4 +39,31 @@ fn main() {
 
 fn run_test_repl() {
     println!("Running test repl");
+    let mut db = Database::new();
+    let mut stdin = stdin();
+    let mut stdout = stdout();
+    let prompt = "embedded>";
+
+    loop {
+
+        write!(stdout, "{}[?] {}{} ", color::Fg(color::Green), style::Reset, prompt).unwrap();
+        stdout.lock().flush().unwrap();
+
+        match TermRead::read_line(&mut stdin) {
+            Ok(Some(buffer)) => {
+                let x= match db.execute(&buffer) {
+                    Ok(QueryResult::StreamCreated) =>
+                        String::from("Stream Created.\n"),
+                    Ok(QueryResult::Insert(id)) =>
+                        format!("Inserted {}", id),
+                    _ => String::from("Fail?")
+
+                };
+                println!("{}", x);
+            },
+            Ok(None) => {},
+            Err(e) => {}
+        }
+    }
+
 }
