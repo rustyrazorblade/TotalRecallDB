@@ -1,7 +1,7 @@
 use super::Statement;
 use db::value::Value;
 use db::row_builder::RowBuilder;
-use db::schema::TypeDef;
+use super::ColumnSpec;
 
 #[pub]
 statement -> Statement
@@ -10,7 +10,7 @@ statement -> Statement
 declare_stream -> Statement
     = declare  stream name:table_name as?
     lparen
-    column_spec
+    column_spec_list
     rparen
     {
         Statement::DeclareStream(name)
@@ -37,6 +37,14 @@ field_value_list -> RowBuilder
         }
         r
     }
+
+#[pub]
+column_spec_list -> Vec<ColumnSpec>
+    = column_spec ++ ","
+    {
+        Vec::new()
+    }
+
 
 #[pub]
 column_spec

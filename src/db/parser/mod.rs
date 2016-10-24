@@ -29,6 +29,10 @@ pub enum Statement {
     Subscribe,
 }
 
+#[derive(Debug)]
+pub struct ColumnSpec {
+    ftype: Type,
+}
 
 #[cfg(test)]
 mod test {
