@@ -2,6 +2,7 @@ use super::Statement;
 use db::value::Value;
 use db::row_builder::RowBuilder;
 use super::ColumnSpec;
+use db::schema::Type;
 
 #[pub]
 statement -> Statement
@@ -48,7 +49,7 @@ column_spec_list -> Vec<ColumnSpec>
 
 #[pub]
 column_spec -> ColumnSpec
-    = f:field
+    = f:field __ t:data_type __
     {
         ColumnSpec::new(f)
     }
@@ -114,3 +115,15 @@ eol
   / "\u{2028}"
   / "\u{2029}"
 
+// data type defs
+data_type -> Type
+    = int_type / string_type / timestamp_type
+
+int_type -> Type
+    = "int"i { Type::Int }
+
+string_type -> Type
+    = ("string"i / "text"i) { Type::String }
+
+timestamp_type -> Type
+    = "timestamp"i { Type::Timestamp }

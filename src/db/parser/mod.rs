@@ -111,10 +111,10 @@ mod test {
     #[test]
     fn test_basic_parse_column_specification() {
         let x = "ts int";
-        let p = parse_statement(x).unwrap();
+        let p = column_spec(x).unwrap();
 
         let x = "ts text";
-        let p = parse_statement(x).unwrap();
+        let p = column_spec(x).unwrap();
 
     }
 }
