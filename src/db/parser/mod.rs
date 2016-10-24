@@ -22,7 +22,7 @@ pub enum Statement {
     // Stream & Keys
     Insert(String, RowBuilder),
     // name
-    DeclareStream(String),
+    DeclareStream(String, Vec<ColumnSpec>),
     DropStream,
     UseDatabase,
     Select,
@@ -31,7 +31,14 @@ pub enum Statement {
 
 #[derive(Debug)]
 pub struct ColumnSpec {
-    ftype: Type,
+    name: String,
+//    ftype: Type,
+}
+
+impl ColumnSpec {
+    fn new(name: String) -> ColumnSpec {
+        ColumnSpec{name: name}
+    }
 }
 
 #[cfg(test)]
