@@ -25,7 +25,8 @@ pub enum Statement {
     DeclareStream(String, Vec<ColumnSpec>),
     DropStream,
     UseDatabase,
-    Select,
+    // Stream
+    Select(String),
     Subscribe,
 }
 
@@ -138,6 +139,21 @@ mod test {
         for q in queries.into_iter() {
             parse_statement(&q).expect(q);
         }
+
+    }
+
+    #[test]
+    fn test_field_list() {
+        let queries = ["name, email",
+            "*", "stuff"];
+        for q in queries.into_iter() {
+            field_list(q).expect(q);
+        }
+
+    }
+
+    #[test]
+    fn test_where_clause() {
 
     }
 }

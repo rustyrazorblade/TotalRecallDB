@@ -6,8 +6,9 @@ use db::schema::Type;
 
 #[pub]
 statement -> Statement
-    = insert_statement / declare_stream
+    = insert_statement / declare_stream / select_statement
 
+// top level statement types
 declare_stream -> Statement
     = declare  stream name:table_name __ as? __
     lparen
@@ -21,6 +22,14 @@ insert_statement -> Statement
     = insert __ into __ table:table __ set __ row_builder:field_value_list __ ";"
     { Statement::Insert(table, row_builder) }
 
+select_statement -> Statement
+    = select field_list from stream:table where_clauses ";"?
+    { Statement::Select(stream) }
+
+// end top level statement types
+
+select = "select"i __
+from = "from"i __
 set = "set"i
 insert = "insert"i
 as = "as"i __
@@ -43,6 +52,13 @@ field_value_list -> RowBuilder
 column_spec_list -> Vec<ColumnSpec>
     = column_spec ++ ","
 
+#[pub]
+where_clauses = ""
+
+#[pub]
+field_list = ""
+
+where = "where"i __
 
 #[pub]
 column_spec -> ColumnSpec
