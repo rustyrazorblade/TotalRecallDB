@@ -213,7 +213,7 @@ mod tests {
         let c = Value::from(40);
         let mut i = 0;
         for row in s.into_iter().filter(|ref x| ValueComparator::new(x.get("age").unwrap(), Type::Int) >
-                                            ValueComparator::new(&c, Type::Int) )  {
+                                                ValueComparator::new(&c, Type::Int) )  {
             i = i + 1;
         }
         assert_eq!(i, 5);

@@ -129,6 +129,17 @@ mod test {
         assert_eq!(p[1].name, "val");
         assert_eq!(p[2].name, "s");
     }
+
+    #[test]
+    fn test_select_queries() {
+        let queries = ["select * from test",
+                        "select name, age from users",
+                        "select name from cities where state = 'CA'"];
+        for q in queries.into_iter() {
+            parse_statement(&q).expect(q);
+        }
+
+    }
 }
 
 
