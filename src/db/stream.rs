@@ -128,7 +128,7 @@ mod tests {
     use super::{Stream, RowBuilder};
 
     use db::schema::{Schema, Type};
-    use db::value::Value;
+    use db::value::{Value, ValueComparator};
     use std::collections::HashMap;
     use self::test::Bencher;
 
@@ -210,9 +210,13 @@ mod tests {
     fn test_chaining() {
         let mut s = get_stream_with_data();
         // SELECT * from X where age > 25
-//        for row in s.into_iter().filter(|x| x["age"] > 25)  {
-//
-//        }
+        let c = Value::from(40);
+        let mut i = 0;
+        for row in s.into_iter().filter(|ref x| ValueComparator::new(x.get("age").unwrap(), Type::Int) >
+                                            ValueComparator::new(&c, Type::Int) )  {
+            i = i + 1;
+        }
+        assert_eq!(i, 5);
 
     }
 
@@ -226,6 +230,12 @@ mod tests {
             row.set_int("num_tacos", 4);
             stream.insert(row);
         });
+    }
+
+    #[test]
+    fn test_table_scan() {
+        let mut stream = get_stream_with_data();
+
     }
 
 }

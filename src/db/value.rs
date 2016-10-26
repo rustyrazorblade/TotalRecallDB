@@ -45,18 +45,18 @@ impl<'a> From<&'a str> for Value {
 }
 
 #[derive(Debug)]
-struct ValueComparator {
-    val: Value,
+pub struct ValueComparator<'a> {
+    val: &'a Value,
     dtype: Type,
 }
 
-impl ValueComparator {
-    fn new(val: Value, dtype: Type) -> ValueComparator {
+impl<'a> ValueComparator<'a> {
+    pub fn new(val: &Value, dtype: Type) -> ValueComparator {
         ValueComparator{val:val, dtype:dtype}
     }
 }
 
-impl Ord for ValueComparator {
+impl<'a> Ord for ValueComparator<'a> {
     fn cmp(&self, other: &ValueComparator) -> Ordering {
         match (&self.dtype, &other.dtype) {
             (&Type::Int, &Type::Int) => self.val.to_int().cmp(&other.val.to_int()),
@@ -66,7 +66,7 @@ impl Ord for ValueComparator {
     }
 }
 
-impl PartialEq for ValueComparator {
+impl<'a> PartialEq for ValueComparator<'a> {
     fn eq(&self, other: &ValueComparator) -> bool {
         match (&self.dtype, &other.dtype) {
             (&Type::Int, &Type::Int) => self.val.to_int() == other.val.to_int(),
@@ -76,9 +76,9 @@ impl PartialEq for ValueComparator {
     }
 }
 
-impl Eq for ValueComparator {}
+impl<'a> Eq for ValueComparator<'a> {}
 
-impl PartialOrd for ValueComparator {
+impl<'a> PartialOrd for ValueComparator<'a> {
     fn partial_cmp(&self, other: &ValueComparator) -> Option<Ordering> {
         Some(self.cmp(other))
     }
@@ -104,26 +104,26 @@ mod tests {
         let mut x = Value::from(1);
         let mut y = Value::from(1);
 
-        assert_eq!(ValueComparator::new(x, Type::Int),
-                   ValueComparator::new(y, Type::Int));
+        assert_eq!(ValueComparator::new(&x, Type::Int),
+                   ValueComparator::new(&y, Type::Int));
 
         let mut x = Value::from(2);
         let mut y = Value::from(1);
 
-        assert!(ValueComparator::new(x, Type::Int) >
-                ValueComparator::new(y, Type::Int));
+        assert!(ValueComparator::new(&x, Type::Int) >
+                ValueComparator::new(&y, Type::Int));
 
         let mut x = Value::from(1);
         let mut y = Value::from(2);
 
-        assert!(ValueComparator::new(y, Type::Int) >
-                ValueComparator::new(x, Type::Int));
+        assert!(ValueComparator::new(&y, Type::Int) >
+                ValueComparator::new(&x, Type::Int));
 
         let mut x = Value::from(-1);
         let mut y = Value::from(2);
 
-        assert!(ValueComparator::new(y, Type::Int) >
-            ValueComparator::new(x, Type::Int));
+        assert!(ValueComparator::new(&y, Type::Int) >
+                ValueComparator::new(&x, Type::Int));
 
     }
 
