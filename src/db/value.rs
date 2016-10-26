@@ -1,8 +1,10 @@
 extern crate byteorder;
 
+use std::cmp::{Ord, Ordering};
+
 use std::io::Cursor;
 use self::byteorder::{ReadBytesExt, WriteBytesExt, LittleEndian};
-
+use super::schema::{Schema, Type};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Value {
@@ -39,6 +41,37 @@ impl<'a> From<&'a str> for Value {
         let mut v : Vec<u8> = Vec::new();
         v.extend_from_slice(&tmp);
         Value{data:v}
+    }
+}
+
+struct ValueComparator {
+    val: Value,
+    dtype: Type,
+}
+
+impl ValueComparator {
+    fn new(val: Value, dtype: Type) -> ValueComparator {
+        ValueComparator{val:val, dtype:dtype}
+    }
+}
+
+impl Ord for ValueComparator {
+    fn cmp(&self, other: &ValueComparator) -> Ordering {
+        Ordering::Equal
+    }
+}
+
+impl PartialEq for ValueComparator {
+    fn eq(&self, other: &ValueComparator) -> bool {
+        true
+    }
+}
+
+impl Eq for ValueComparator {}
+
+impl PartialOrd for ValueComparator {
+    fn partial_cmp(&self, other: &ValueComparator) -> Option<Ordering> {
+        Some(self.cmp(other))
     }
 }
 
