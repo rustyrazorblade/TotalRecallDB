@@ -44,6 +44,7 @@ impl<'a> From<&'a str> for Value {
     }
 }
 
+#[derive(Debug)]
 struct ValueComparator {
     val: Value,
     dtype: Type,
@@ -85,7 +86,9 @@ impl PartialOrd for ValueComparator {
 
 #[cfg(test)]
 mod tests {
-    use super::Value;
+    use super::{Value, ValueComparator};
+    use db::schema::Type;
+
     #[test]
     fn ints_should_compare_equal() {
         let mut x = Value::from(1);
@@ -94,6 +97,34 @@ mod tests {
 
         y = Value::from(2);
         assert!(x != y);
+    }
+
+    #[test]
+    fn test_int_custom_comparator() {
+        let mut x = Value::from(1);
+        let mut y = Value::from(1);
+
+        assert_eq!(ValueComparator::new(x, Type::Int),
+                   ValueComparator::new(y, Type::Int));
+
+        let mut x = Value::from(2);
+        let mut y = Value::from(1);
+
+        assert!(ValueComparator::new(x, Type::Int) >
+                ValueComparator::new(y, Type::Int));
+
+        let mut x = Value::from(1);
+        let mut y = Value::from(2);
+
+        assert!(ValueComparator::new(y, Type::Int) >
+                ValueComparator::new(x, Type::Int));
+
+        let mut x = Value::from(-1);
+        let mut y = Value::from(2);
+
+        assert!(ValueComparator::new(y, Type::Int) >
+            ValueComparator::new(x, Type::Int));
+
     }
 
     #[test]
