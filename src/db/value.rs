@@ -65,6 +65,7 @@ impl PartialEq for ValueComparator {
     fn eq(&self, other: &ValueComparator) -> bool {
         match (&self.dtype, &other.dtype) {
             (&Type::Int, &Type::Int) => self.val.to_int() == other.val.to_int(),
+            (&Type::String, &Type::String) => self.val.to_string() == other.val.to_string(),
             _ => false
         }
     }
