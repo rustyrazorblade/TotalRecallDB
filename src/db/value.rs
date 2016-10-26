@@ -57,7 +57,11 @@ impl ValueComparator {
 
 impl Ord for ValueComparator {
     fn cmp(&self, other: &ValueComparator) -> Ordering {
-        Ordering::Equal
+        match (&self.dtype, &other.dtype) {
+            (&Type::Int, &Type::Int) => self.val.to_int().cmp(&other.val.to_int()),
+            (&Type::String, &Type::String) => self.val.to_string().cmp(&other.val.to_string()),
+            _ => Ordering::Less
+        }
     }
 }
 
