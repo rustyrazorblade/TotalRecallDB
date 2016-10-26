@@ -63,7 +63,10 @@ impl Ord for ValueComparator {
 
 impl PartialEq for ValueComparator {
     fn eq(&self, other: &ValueComparator) -> bool {
-        true
+        match (&self.dtype, &other.dtype) {
+            (&Type::Int, &Type::Int) => self.val.to_int() == other.val.to_int(),
+            _ => false
+        }
     }
 }
 
