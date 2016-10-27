@@ -5,13 +5,7 @@ use super::schema::Type;
 
 mod integration_tests;
 
-use nom::{IResult,digit};
-use nom::IResult::*;
-
-
-
 peg_file! streamql("streamql.rustpeg");
-
 
 pub fn parse_statement(query: &str) -> Result<Statement, ParseError> {
     statement(query)
