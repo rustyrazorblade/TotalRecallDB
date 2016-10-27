@@ -154,7 +154,12 @@ mod test {
 
     #[test]
     fn test_where_clause() {
-
+        let queries = ["where name = 'jon'",
+        "where id = 5",
+        "where name = 'bill' and age > 35"];
+        for q in queries.into_iter() {
+            field_list(q).expect(q);
+        }
     }
 }
 
