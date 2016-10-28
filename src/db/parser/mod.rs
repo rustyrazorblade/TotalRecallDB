@@ -196,8 +196,14 @@ mod test {
 
     #[test]
     fn test_grouping() {
-        expression_grouped("(name)")
+        expression_grouped("(fname > 0)")
             .expect("Expecting name > 5");
+
+    }
+
+    #[test]
+    fn test_and() {
+        //expression_and()
     }
 
 

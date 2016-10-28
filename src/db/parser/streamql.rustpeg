@@ -121,16 +121,20 @@ int -> i64
 
 
 // EXPRESSIONS, TIME FOR INSANITY
+
 #[pub]
 expression -> Box<Expression>
-    = expression_value
-    / expression_grouped
-    / expression_field
+    = expression_grouped
     / expression_operator
+    / expression_value
+    / expression_field
+
+// the problem with operator here ^^ is that it needs to be above field, but because of the recursion will die
+// i'm not sure how to prevent this
 
 #[pub]
 expression_grouped -> Box<Expression>
-    = lparen e:expression rparen
+    = lparen e:expression_value rparen
     { e }
 
 #[pub]
@@ -145,10 +149,19 @@ expression_field -> Box<Expression>
 
 #[pub]
 expression_operator -> Box<Expression>
-    = lhs:expression __ op:operator __ rhs:expression
+    = lhs:expression_no_operator __
+        op:operator __
+        rhs:expression_no_operator
     {
     Box::new(Expression::Comparison(op, lhs, rhs))
     }
+
+#[pub]
+expression_no_operator -> Box<Expression>
+    = expression_grouped
+    / expression_value
+    / expression_field
+
 // END OF EXPRESSION MADNESS
 
 lparen = "(" __
