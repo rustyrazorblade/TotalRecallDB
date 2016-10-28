@@ -35,7 +35,7 @@ enum Operator {
     LessThanEqual,
 }
 
-enum Expression {
+pub enum Expression {
     Value(Value),
     Comparison(Operator, Box<Expression>, Box<Expression>),
     Function(String, Vec<Expression> ),
@@ -180,7 +180,12 @@ mod test {
     // expression testing
     #[test]
     fn test_value_expression() {
-
+        let tmp = expression_value("1").expect("1");
+    }
+    #[test]
+    fn test_field_expression() {
+        let tmp = expression_field("name")
+                   .expect("name didn't parse");
     }
 
 

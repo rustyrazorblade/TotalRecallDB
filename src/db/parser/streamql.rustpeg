@@ -121,13 +121,19 @@ int -> i64
 
 
 // EXPRESSIONS, TIME FOR INSANITY
+#[pub]
 expression -> Box<Expression>
     = "" {Box::new(Expression::None)}
 
+#[pub]
 expression_value -> Box<Expression>
     = v:value
     { Box::new( Expression::Value( Value::from(v) ) ) }
 
+#[pub]
+expression_field -> Box<Expression>
+    = f:field
+    { Box::new(Expression::Field(f)) }
 
 // END OF EXPRESSION MADNESS
 
