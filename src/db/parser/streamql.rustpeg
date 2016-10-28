@@ -111,7 +111,9 @@ operator -> Operator
       ">" { Operator::GreaterThan } /
       ">=" { Operator::GreaterThanEqual } /
       "<" { Operator::LessThan } /
-      "<=" { Operator::LessThanEqual }
+      "<=" { Operator::LessThanEqual } /
+      "and" { Operator::And } /
+      "or" { Operator::Or }
 
 
 declare = "declare" __

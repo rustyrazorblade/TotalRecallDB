@@ -25,7 +25,9 @@ pub enum Statement {
     Subscribe,
 }
 
-
+// infix operators
+// used for 2 expressions
+// 2 expressions must evaluate to a bool
 enum Operator {
     Equal,
     NotEqual,
@@ -33,6 +35,8 @@ enum Operator {
     GreaterThanEqual,
     LessThan,
     LessThanEqual,
+    And,
+    Or
 }
 
 pub enum Expression {
@@ -192,14 +196,21 @@ mod test {
     fn test_operators() {
         expression_operator("name > 5")
             .expect("Expecting name > 5");
+
+        let x = "age > 10 and city = 'Boston'";
+        expression(x).expect(x);
     }
 
     #[test]
     fn test_grouping() {
         expression_grouped("(fname > 0)")
             .expect("Expecting name > 5");
+        expression("(fname > 0)")
+            .expect("Expecting name > 5");
+
 
     }
+
 
     #[test]
     fn test_and() {
