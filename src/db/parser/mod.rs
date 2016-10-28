@@ -188,6 +188,11 @@ mod test {
                    .expect("name didn't parse");
     }
 
+    #[test]
+    fn test_operators() {
+        expression_operator("name > 5")
+            .expect("Expecting name > 5");
+    }
 
 }
 

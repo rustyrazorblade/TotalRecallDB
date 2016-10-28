@@ -123,7 +123,9 @@ int -> i64
 // EXPRESSIONS, TIME FOR INSANITY
 #[pub]
 expression -> Box<Expression>
-    = "" {Box::new(Expression::None)}
+    = expression_value
+    / expression_field
+    / expression_operator
 
 #[pub]
 expression_value -> Box<Expression>
@@ -135,6 +137,12 @@ expression_field -> Box<Expression>
     = f:field
     { Box::new(Expression::Field(f)) }
 
+#[pub]
+expression_operator -> Box<Expression>
+    = lhs:expression __ op:operator __ rhs:expression
+    {
+    Box::new(Expression::Comparison(op, lhs, rhs))
+    }
 // END OF EXPRESSION MADNESS
 
 lparen = "(" __
