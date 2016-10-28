@@ -115,6 +115,10 @@ operator -> Operator
       "and" { Operator::And } /
       "or" { Operator::Or }
 
+operator_chainable -> Operator
+    = "and" { Operator::And } /
+      "or" { Operator::Or }
+
 
 declare = "declare" __
 
@@ -131,8 +135,6 @@ expression -> Box<Expression>
     / expression_value
     / expression_field
 
-// the problem with operator here ^^ is that it needs to be above field, but because of the recursion will die
-// i'm not sure how to prevent this
 
 #[pub]
 expression_grouped -> Box<Expression>

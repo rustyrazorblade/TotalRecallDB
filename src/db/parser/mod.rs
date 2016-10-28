@@ -47,8 +47,6 @@ pub enum Expression {
     None,
 }
 
-
-
 #[derive(Debug)]
 pub struct ColumnSpec {
     pub name: String,
@@ -198,6 +196,10 @@ mod test {
             .expect("Expecting name > 5");
 
         let x = "age > 10 and city = 'Boston'";
+        // technically is this:
+        // let x = "((age > 10) and (city = 'Boston'))";
+        // need to rewrite as a bunch of nested binary ops
+        // do i need a second parser just to rewrite?
         expression(x).expect(x);
     }
 
