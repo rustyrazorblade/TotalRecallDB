@@ -20,8 +20,8 @@ for line in open(name):
     line = line[len(prefix):].strip()
 
     print (" " * lpad) + line
-    
+
     if line.startswith("Attempting to match"):
         lpad += indent
-    elif line.startswith("Failed to match"):
+    elif line.startswith("Failed to match") or line.startswith("Matched"):
         lpad -= indent

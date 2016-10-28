@@ -134,7 +134,7 @@ expression -> Box<Expression>
 
 #[pub]
 expression_grouped -> Box<Expression>
-    = lparen e:expression_value rparen
+    = lparen e:expression rparen
     { e }
 
 #[pub]
@@ -159,8 +159,8 @@ expression_operator -> Box<Expression>
 #[pub]
 expression_no_operator -> Box<Expression>
     = expression_grouped
-    / expression_value
     / expression_field
+    / expression_value
 
 // END OF EXPRESSION MADNESS
 
