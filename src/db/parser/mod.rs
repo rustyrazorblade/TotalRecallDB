@@ -194,6 +194,13 @@ mod test {
             .expect("Expecting name > 5");
     }
 
+    #[test]
+    fn test_grouping() {
+        expression_grouped("(name)")
+            .expect("Expecting name > 5");
+    }
+
+
 }
 
 

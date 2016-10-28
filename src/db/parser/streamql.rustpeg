@@ -124,8 +124,14 @@ int -> i64
 #[pub]
 expression -> Box<Expression>
     = expression_value
+    / expression_grouped
     / expression_field
     / expression_operator
+
+#[pub]
+expression_grouped -> Box<Expression>
+    = lparen e:expression rparen
+    { e }
 
 #[pub]
 expression_value -> Box<Expression>
