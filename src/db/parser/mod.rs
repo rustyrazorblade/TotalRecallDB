@@ -20,8 +20,9 @@ pub enum Statement {
     DeclareStream(String, Vec<ColumnSpec>),
     DropStream,
     UseDatabase,
-    // Stream
-    Select(String),
+
+    // Stream, Where cause
+    Select(String, Option<Box<Expression>>),
     Subscribe,
 }
 

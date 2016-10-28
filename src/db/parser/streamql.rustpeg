@@ -23,8 +23,10 @@ insert_statement -> Statement
     { Statement::Insert(table, row_builder) }
 
 select_statement -> Statement
-    = select field_list from stream:table where_clauses ";"?
-    { Statement::Select(stream) }
+    = select field_list from
+      stream:table
+      e:where_clauses? ";"?
+    { Statement::Select(stream, e) }
 
 // end top level statement types
 
@@ -53,7 +55,8 @@ column_spec_list -> Vec<ColumnSpec>
     = column_spec ++ ","
 
 #[pub]
-where_clauses = ""
+where_clauses -> Box<Expression>
+    = where e:expression { e }
 
 #[pub]
 field_list = ""
