@@ -1,7 +1,7 @@
 use super::Statement;
 use db::value::Value;
 use db::row_builder::RowBuilder;
-use super::{ColumnSpec, Operator};
+use super::{ColumnSpec, Operator, Expression};
 use db::schema::Type;
 
 #[pub]
@@ -118,6 +118,18 @@ declare = "declare" __
 
 int -> i64
     = "-"? [0-9]+ { match_str.parse().unwrap() }
+
+
+// EXPRESSIONS, TIME FOR INSANITY
+expression -> Box<Expression>
+    = "" {Box::new(Expression::None)}
+
+expression_value -> Box<Expression>
+    = v:value
+    { Box::new( Expression::Value( Value::from(v) ) ) }
+
+
+// END OF EXPRESSION MADNESS
 
 lparen = "(" __
 rparen = ")" __

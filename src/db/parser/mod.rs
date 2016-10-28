@@ -38,8 +38,9 @@ enum Operator {
 enum Expression {
     Value(Value),
     Comparison(Operator, Box<Expression>, Box<Expression>),
-    Function(String, Vec<Expression> )
-
+    Function(String, Vec<Expression> ),
+    Field(String), // field name
+    None,
 }
 
 
@@ -176,7 +177,15 @@ mod test {
 
     }
 
+    // expression testing
+    #[test]
+    fn test_value_expression() {
+
+    }
+
+
 }
+
 
 
 
