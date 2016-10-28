@@ -40,6 +40,8 @@ enum Operator {
     Or,
     Plus,
     Minus,
+    Multiply,
+    Divide,
 }
 
 #[derive(Debug)]
@@ -227,6 +229,7 @@ mod test {
         }
 
         let x = "(field + 3) > 10";
+        let x = "10 > (field * 3)";
         expression(x).expect(x);
 
     }

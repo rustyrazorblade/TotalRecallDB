@@ -115,7 +115,9 @@ operator -> Operator
       "and" { Operator::And } /
       "or" { Operator::Or } /
       "+" { Operator::Plus } /
-      "-" { Operator::Minus }
+      "-" { Operator::Minus } /
+      "*" { Operator::Multiply } /
+      "/" { Operator::Divide }
 
 and_or -> Operator
     = "and" { Operator::And } /
