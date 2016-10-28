@@ -1,7 +1,7 @@
 use super::Statement;
 use db::value::Value;
 use db::row_builder::RowBuilder;
-use super::ColumnSpec;
+use super::{ColumnSpec, Operator};
 use db::schema::Type;
 
 #[pub]
@@ -67,6 +67,7 @@ column_spec -> ColumnSpec
         ColumnSpec::new(f, t)
     }
 
+// this is used for inserts
 #[pub]
 field_equals_value -> (String, Value)
     = __ f:field __ equals  v:value __ { (f, v) }
@@ -103,6 +104,14 @@ quoted_string -> String
 string -> String
     = ([^'] / "''")*
     { match_str.to_string().replace("''", "'") }
+
+operator -> Operator
+    = "=" { Operator::Equal } /
+      "!=" { Operator::NotEqual } /
+      ">" { Operator::GreaterThan } /
+      ">=" { Operator::GreaterThanEqual } /
+      "<" { Operator::LessThan } /
+      "<=" { Operator::LessThanEqual }
 
 
 declare = "declare" __

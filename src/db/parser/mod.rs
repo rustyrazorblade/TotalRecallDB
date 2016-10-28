@@ -24,6 +24,24 @@ pub enum Statement {
     Subscribe,
 }
 
+
+enum Operator {
+    Equal,
+    NotEqual,
+    GreaterThan,
+    GreaterThanEqual,
+    LessThan,
+    LessThanEqual,
+}
+
+//struct Expression {
+//    lhs:
+//    operator: Operator,
+//    rhs:
+//}
+
+
+
 #[derive(Debug)]
 pub struct ColumnSpec {
     pub name: String,
@@ -143,7 +161,6 @@ mod test {
         for q in queries.into_iter() {
             field_list(q).expect(q);
         }
-
     }
 
     #[test]
@@ -154,8 +171,11 @@ mod test {
         for q in queries.into_iter() {
             field_list(q).expect(q);
         }
+
     }
+
 }
+
 
 
 
