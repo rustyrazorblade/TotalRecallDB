@@ -1,7 +1,7 @@
 use super::Statement;
 use db::value::Value;
 use db::row_builder::RowBuilder;
-use super::{ColumnSpec, Operator, Expression};
+use super::{ColumnSpec, Operator, Expression, Fields};
 use db::schema::Type;
 
 #[pub]
@@ -59,7 +59,8 @@ where_clause -> Box<Expression>
     = where e:expression { e }
 
 #[pub]
-field_list = ""
+field_list = (field __)  ++ ","
+
 
 where = "where"i __
 

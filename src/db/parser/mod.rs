@@ -46,6 +46,14 @@ enum Operator {
 }
 
 #[derive(Debug)]
+pub enum Fields {
+    All,
+    Named(Vec<String>),
+}
+
+
+
+#[derive(Debug)]
 pub enum Expression {
     Value(Value),
     Comparison(Operator, Box<Expression>, Box<Expression>),
