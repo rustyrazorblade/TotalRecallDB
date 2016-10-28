@@ -37,7 +37,9 @@ enum Operator {
     LessThan,
     LessThanEqual,
     And,
-    Or
+    Or,
+    Plus,
+    Minus,
 }
 
 #[derive(Debug)]
@@ -223,6 +225,9 @@ mod test {
                 panic!("NOOO");
             }
         }
+
+        let x = "(field + 3) > 10";
+        expression(x).expect(x);
 
     }
 

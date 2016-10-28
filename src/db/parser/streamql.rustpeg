@@ -113,7 +113,9 @@ operator -> Operator
       "<" { Operator::LessThan } /
       "<=" { Operator::LessThanEqual } /
       "and" { Operator::And } /
-      "or" { Operator::Or }
+      "or" { Operator::Or } /
+      "+" { Operator::Plus } /
+      "-" { Operator::Minus }
 
 and_or -> Operator
     = "and" { Operator::And } /
@@ -138,7 +140,7 @@ expression -> Box<Expression>
 
 #[pub]
 expression_and_or -> Box<Expression>
-     = lhs:expression_no_and_or __ ao:and_or __ rhs:expression
+     = lhs:expression_no_and_or __ ao:operator __ rhs:expression
      { Box::new( Expression::Comparison(ao, lhs, rhs) ) }
 
 #[pub]
