@@ -2,6 +2,7 @@ use self::streamql::statement;
 pub use self::streamql::ParseError;
 use super::row_builder::RowBuilder;
 use super::schema::Type;
+use super::value::Value;
 
 mod integration_tests;
 
@@ -34,11 +35,12 @@ enum Operator {
     LessThanEqual,
 }
 
-//struct Expression {
-//    lhs:
-//    operator: Operator,
-//    rhs:
-//}
+enum Expression {
+    Value(Value),
+    Comparison(Operator, Box<Expression>, Box<Expression>),
+    Function(String, Vec<Expression> )
+
+}
 
 
 
