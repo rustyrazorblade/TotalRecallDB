@@ -28,6 +28,7 @@ pub enum Statement {
 // infix operators
 // used for 2 expressions
 // 2 expressions must evaluate to a bool
+#[derive(Debug, PartialEq)]
 enum Operator {
     Equal,
     NotEqual,
@@ -39,6 +40,7 @@ enum Operator {
     Or
 }
 
+#[derive(Debug)]
 pub enum Expression {
     Value(Value),
     Comparison(Operator, Box<Expression>, Box<Expression>),
@@ -63,7 +65,7 @@ impl ColumnSpec {
 #[cfg(test)]
 mod test {
     use super::parse_statement;
-    use super::Statement;
+    use super::{Statement, Expression, Operator};
     use super::streamql::*;
     use db::value::Value;
 
@@ -205,6 +207,23 @@ mod test {
         // same as above but needed to be safe
         let x = "(age > 10) and city = 'Boston'";
         expression(x).expect(x);
+
+        let x = "(age > 10) and (city = 'Boston')";
+        expression(x).expect(x);
+
+        let x = "((age > 10) and (city = 'Boston')) or age = 3";
+        let y = expression(x).expect(x);
+
+        match *y {
+            Expression::Comparison(ref a, ref b, ref c) =>
+                {
+                    assert_eq!(*a, Operator::Or);
+                }
+            _ => {
+                panic!("NOOO");
+            }
+        }
+
     }
 
     #[test]
