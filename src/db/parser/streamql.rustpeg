@@ -58,9 +58,24 @@ column_spec_list -> Vec<ColumnSpec>
 where_clause -> Box<Expression>
     = where e:expression { e }
 
-#[pub]
-field_list = (field __)  ++ ","
+// FIELDS LIST FOR SELECT
 
+
+#[pub]
+field_list -> Fields
+    = some_fields / all_fields
+
+some_fields -> Fields
+    = a:((__ b:field  __ {b} ) ++ "," )
+    {
+        Fields::Named(a)
+    }
+
+all_fields -> Fields
+    = "*" __
+    { Fields::All }
+    
+// END FIELDS
 
 where = "where"i __
 
