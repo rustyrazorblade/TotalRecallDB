@@ -24,7 +24,7 @@ insert_statement -> Statement
 
 select_statement -> Statement
     = select field_list from
-      stream:table
+      stream:table __
       e:where_clause? ";"?
     { Statement::Select(stream, e) }
 
