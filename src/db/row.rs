@@ -16,6 +16,10 @@ impl Header {
     fn new() -> Header {
         Header{offsets:Vec::new()}
     }
+    // returns an offset in number bytes for the byte data in a Row
+    fn get_offset(field: u8) -> u16 {
+        0
+    }
 
 }
 
@@ -43,7 +47,6 @@ impl fmt::Debug for Row {
     }
 
 }
-
 
 
 impl Row {

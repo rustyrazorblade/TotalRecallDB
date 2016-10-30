@@ -44,6 +44,14 @@ impl<'a> From<&'a str> for Value {
     }
 }
 
+impl<'a> From<&'a [u8]> for Value {
+    fn from(bytes: &'a [u8]) -> Value {
+        let mut v : Vec<u8> = Vec::new();
+        v.extend_from_slice(bytes);
+        Value{data:v}
+    }
+}
+
 #[derive(Debug)]
 pub struct ValueComparator<'a> {
     val: &'a Value,
