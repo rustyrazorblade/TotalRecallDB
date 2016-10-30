@@ -1,6 +1,6 @@
-pub use super::schema::Schema;
-pub use super::row::Row;
-pub use super::value::Value;
+pub use db::schema::Schema;
+pub use db::row::Row;
+pub use db::value::Value;
 
 pub struct RowReader<'a> {
     schema: &'a Schema,
@@ -22,7 +22,7 @@ impl<'a> RowReader<'a> {
 
 mod tests {
     use super::*;
-    use db::row_builder::RowBuilder;
+    use db::row::RowBuilder;
     use db::stream::Stream;
     use db::schema::Type;
 

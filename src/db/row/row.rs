@@ -1,7 +1,7 @@
 use std::time::{Duration, SystemTime};
 use std::collections::HashMap;
 use std::fmt;
-use super::value::Value;
+use db::value::Value;
 
 pub enum RowError {
     MissingId
@@ -25,6 +25,7 @@ impl Header {
     fn get_offset(field: u8) -> u16 {
         0
     }
+
 
 }
 
@@ -69,7 +70,7 @@ impl Row {
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
-    use super::super::value::Value;
+    use db::value::Value;
     use super::*;
 
     #[test]

@@ -1,11 +1,9 @@
 use std::collections::HashMap;
 use std::error;
 
-use super::row::{Row, RowError};
+use super::row::{Row, RowError, RowBuilder, RowReader};
 use super::schema::{Schema, Type};
 use super::value::Value;
-pub use super::row_builder::RowBuilder;
-pub use super::row_reader::RowReader;
 
 #[derive(Debug)]
 pub enum StreamError {
@@ -125,7 +123,8 @@ impl<'a> Iterator for StreamIterator<'a> {
 mod tests {
     #![feature(test)]
     extern crate test;
-    use super::{Stream, RowBuilder};
+    use super::{Stream};
+    use db::row::RowBuilder;
 
     use db::schema::{Schema, Type};
     use db::value::{Value, ValueComparator};

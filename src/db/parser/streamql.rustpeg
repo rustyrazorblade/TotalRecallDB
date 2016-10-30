@@ -1,6 +1,6 @@
 use super::Statement;
 use db::value::Value;
-use db::row_builder::RowBuilder;
+use db::row::RowBuilder;
 use super::{ColumnSpec, Operator, Expression, Fields};
 use db::schema::Type;
 
