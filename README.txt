@@ -13,11 +13,14 @@ stream header: 128bytes - too much?  what do i even need here?
 
 Row header
     u16 size (2 bytes)
+    start id
+    end id
+    some timestamp?
 
 serialized row data
     field type
     row size (optional?)
     row data
 
-same format is used for the return of results (results are themselves streams) meaning the network format matches the on disk format.  possibly stupid.  
+same format is used for the return of results (results are themselves streams) meaning the network format matches the on disk format.  possibly stupid.
 
