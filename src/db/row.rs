@@ -7,11 +7,30 @@ pub enum RowError {
     MissingId
 }
 
+struct Header {
+    offsets: Vec<(u8, u16)>
+}
+
+
+impl Header {
+    fn new() -> Header {
+        Header{offsets:Vec::new()}
+    }
+
+}
+
+impl<'a> From<&'a [u8]> for Header {
+    fn from(bytes: &'a [u8]) -> Header {
+        Header::new()
+    }
+}
+
 // it's the table's job to validate the data going into the row
 #[derive(Clone)]
 pub struct Row {
     fields: HashMap<u8, Value>,
 }
+
 
 impl fmt::Debug for Row {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
