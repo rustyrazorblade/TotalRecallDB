@@ -7,10 +7,15 @@ pub enum RowError {
     MissingId
 }
 
+/*
+Header for a row
+
+Stores a Vector of field & offset pairs
+Used with a Row to get correct slices of data to create Values
+*/
 struct Header {
     offsets: Vec<(u8, u16)>
 }
-
 
 impl Header {
     fn new() -> Header {
