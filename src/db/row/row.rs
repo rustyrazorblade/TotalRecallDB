@@ -44,19 +44,21 @@ impl<'a> From<&'a [u8]> for Row {
         debug!("Reading row, total fields expected: {}", fields);
 
         for x in 0..fields {
-            debug!("Reading field");
+            debug!("Reading field {}", x);
             let field = cur.read_u16::<BigEndian>()
                                 .expect("Expecting Field id");
             debug!("Field: {}", field);
             let size = cur.read_u64::<BigEndian>()
                                .expect("Expecting Field length");
-
+            debug!("Field size: {}", size);
+            debug!("Cursor position before reading value: {}", cur.position());
             let mut data = Vec::with_capacity(size as usize);
             {
                 cur.by_ref().take(size).read(&mut data);
             }
-
-//            let data = cur[10..];
+            let pos = cur.position();
+            cur.set_position(pos + size);
+            debug!("Cursor position after reading value: {}", cur.position());
         }
 
         Row::empty()
