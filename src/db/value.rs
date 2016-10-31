@@ -102,6 +102,7 @@ impl<'a> PartialOrd for ValueComparator<'a> {
 
 #[cfg(test)]
 mod tests {
+    extern crate env_logger;
     use super::{Value, ValueComparator};
     use db::schema::Type;
 
@@ -161,7 +162,10 @@ mod tests {
 
     #[test]
     fn string_conversions() {
+        let _ = env_logger::init();
         let tmp = Value::from("this is a test");
+        debug!("String data: {:?}", tmp.data);
+        assert!(tmp.data.len() > 10);
         let x = tmp.to_string();
         assert_eq!(x, "this is a test");
     }

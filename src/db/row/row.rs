@@ -25,12 +25,9 @@ pub struct Row {
 
 impl fmt::Debug for Row {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut tmp = f.debug_struct("Row");
-        for (key, field) in self.fields.iter() {
-            tmp.field(&String::from("something"), field);
-        }
-        tmp.finish()
-
+        f.write_str("Row: ");
+        let mut tmp = f.debug_map();
+        tmp.entries( self.fields.iter().map(|(k,v)| (k,v) )).finish()
     }
 
 }
@@ -42,26 +39,31 @@ impl<'a> From<&'a [u8]> for Row {
                         .expect("no fields length");
 
         debug!("Reading row, total fields expected: {}", fields);
-
+        let mut hm = HashMap::new();
         for x in 0..fields {
             debug!("Reading field {}", x);
             let field = cur.read_u16::<BigEndian>()
                                 .expect("Expecting Field id");
             debug!("Field: {}", field);
             let size = cur.read_u64::<BigEndian>()
-                               .expect("Expecting Field length");
+                          .expect("Expecting Field length");
             debug!("Field size: {}", size);
             debug!("Cursor position before reading value: {}", cur.position());
             let mut data = Vec::with_capacity(size as usize);
             {
-                cur.by_ref().take(size).read(&mut data);
+                cur.by_ref().take(size).read_to_end(&mut data);
+                debug!("Raw Data: {:?}", data);
             }
             let pos = cur.position();
             cur.set_position(pos + size);
             debug!("Cursor position after reading value: {}", cur.position());
+            //            hm.set(field, )
+            let val = Value::from(&*data);
+            debug!("Data: {:?}", val);
+            hm.insert(field, val);
         }
 
-        Row::empty()
+        Row::new(hm).unwrap()
     }
 }
 
@@ -118,14 +120,17 @@ mod tests {
     #[test]
     fn test_reading_and_writing_row() {
         let _ = env_logger::init();
-        info!("HEY");
+
         let mut fields = HashMap::new();
-        fields.insert(0, Value::from("test"));
-        fields.insert(1, Value::from(50));
+        fields.insert(0, Value::from("this is a test"));
+//        fields.insert(1, Value::from(50));
         let r = Row::new(fields).expect("Valid row");
 
         let encoded = r.to_vec();
         let decoded = Row::from(encoded.as_slice());
 
+        info!("encoded: {:?}", encoded);
+        debug!("decoded: {:?}", decoded);
+        assert_eq!(*decoded.get(0).unwrap(), Value::from("this is a test"));
     }
 }
