@@ -60,6 +60,11 @@ impl Row {
     pub fn to_vec(&self) -> Vec<u8> {
         let mut buffer = vec![];
 
+        // header is just the number of fields
+        let fields = self.fields.len() as u16;
+
+        buffer.write_u16::<BigEndian>(fields);
+
         for (k, v) in self.fields.iter()  {
             // write field (u16), size (u64), data
             buffer.write_u16::<BigEndian>(*k);
