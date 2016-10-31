@@ -13,7 +13,7 @@ pub enum RowError {
 // it's the table's job to validate the data going into the row
 #[derive(Clone)]
 pub struct Row {
-    header: Header,
+//    header: Header,
     fields: HashMap<u8, Value>,
 }
 
@@ -30,14 +30,22 @@ impl fmt::Debug for Row {
 
 }
 
+impl<'a> From<&'a [u8]> for Row {
+    fn from(bytes: &'a [u8]) -> Row {
+        Row::empty()
+    }
+}
 
 impl Row {
     pub fn new(fields: HashMap<u8, Value>) -> Result<Row, RowError>  {
-        Ok(Row{fields: fields, header: Header::new()})
+        Ok(Row{fields: fields})
     }
 
     pub fn get(&self, field: u8) -> Option<&Value> {
         self.fields.get(&field)
+    }
+    pub fn empty() -> Row {
+        Row{fields: HashMap::new()}
     }
 
 //    fn get_string(&self, field: u8) ->
