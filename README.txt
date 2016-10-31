@@ -1,8 +1,38 @@
-This database doesn't even have a name, for now, it's stream your face off.
+# TotalRecallDB
 
 WTF is this?
 
 Think of it as a cross between pub/sub and a SQL database.  This is really just a POC to build something more awesome later, likely an alternative to Kafka.
+
+## Building
+
+Building requires nightly Rust due to macros and compiler plugins.
+
+cargo build --release
+
+Look in target/release for the binary totalrecalldb
+
+## Using Embedded Mode
+
+Currently the only thing that can be done, because I haven't written any socket code.  Probably won't for a while either.
+
+./totalrecalldb test
+
+Will start up a REPL with an embedded server.  Currently only creating streams and inserting data works.
+
+
+
+## Doing Stuff
+
+
+```
+[?] embedded> declare stream ts (sensor int, data text );
+Stream Created.
+
+[?] embedded> insert into ts set sensor=1, data='test';
+Inserted 0
+[?] embedded> insert into ts set sensor=1, data='test2';
+```
 
 
 ## Storage Format

@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use super::value::Value;
+use db::value::Value;
 
 #[derive(Debug)]
 pub struct RowBuilder {

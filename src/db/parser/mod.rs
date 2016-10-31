@@ -1,6 +1,6 @@
 use self::streamql::statement;
 pub use self::streamql::ParseError;
-use super::row_builder::RowBuilder;
+use db::row::RowBuilder;
 use super::schema::Type;
 use super::value::Value;
 

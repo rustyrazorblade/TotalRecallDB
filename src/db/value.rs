@@ -1,30 +1,37 @@
 extern crate byteorder;
 
 use std::cmp::{Ord, Ordering};
+use std::ops::Deref;
 
 use std::io::Cursor;
-use self::byteorder::{ReadBytesExt, WriteBytesExt, LittleEndian};
+use self::byteorder::{ReadBytesExt, WriteBytesExt, BigEndian};
 use super::schema::{Schema, Type};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Value {
-    data: Vec<u8>
+    pub data: Vec<u8>
 }
 
 impl Value {
     fn to_int(&self) -> i64 {
         let mut cur = Cursor::new(self.data.clone());
-        cur.read_i64::<LittleEndian>().unwrap()
+        cur.read_i64::<BigEndian>().unwrap()
     }
     fn to_string(&self) -> String {
         String::from_utf8(self.data.clone()).unwrap()
+    }
+    pub fn as_slice(&self) -> &[u8] {
+        self.data.as_ref()
+    }
+    pub fn len(&self) -> u64 {
+        self.data.len() as u64
     }
 }
 
 impl From<i64> for Value {
     fn from(val: i64) -> Value {
         let mut buffer = Vec::new();
-        buffer.write_i64::<LittleEndian>(val).unwrap();
+        buffer.write_i64::<BigEndian>(val).unwrap();
         Value { data: buffer }
     }
 }
@@ -43,6 +50,15 @@ impl<'a> From<&'a str> for Value {
         Value{data:v}
     }
 }
+
+impl<'a> From<&'a [u8]> for Value {
+    fn from(bytes: &'a [u8]) -> Value {
+        let mut v : Vec<u8> = Vec::new();
+        v.extend_from_slice(bytes);
+        Value{data:v}
+    }
+}
+
 
 #[derive(Debug)]
 pub struct ValueComparator<'a> {
