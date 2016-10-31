@@ -9,6 +9,10 @@ extern crate clap;
 extern crate termion;
 extern crate byteorder;
 
+#[macro_use]
+extern crate log;
+
+
 mod db;
 
 use db::server::Server;

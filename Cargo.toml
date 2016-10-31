@@ -9,3 +9,5 @@ byteorder = "0.5.3"  # data type conversion
 nom = "^1.2.4"
 clap = "2" # CLI parsing
 termion = "1.0"
+log = "0.3"
+env_logger = "0.3"

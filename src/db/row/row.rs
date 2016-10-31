@@ -1,15 +1,14 @@
-
 use std::time::{Duration, SystemTime};
 use std::collections::HashMap;
 use std::fmt;
 use db::value::Value;
 use super::Header;
-
+use std::io::Cursor;
+use std::io::Read;
 // big endian for life
-use byteorder::{BigEndian, WriteBytesExt};
+use byteorder::{BigEndian, WriteBytesExt, ReadBytesExt};
 
-
-
+#[derive(Debug, PartialEq)]
 pub enum RowError {
     MissingId
 }
@@ -38,6 +37,28 @@ impl fmt::Debug for Row {
 
 impl<'a> From<&'a [u8]> for Row {
     fn from(bytes: &'a [u8]) -> Row {
+        let mut cur = Cursor::new(bytes);
+        let fields = cur.read_u16::<BigEndian>()
+                        .expect("no fields length");
+
+        debug!("Reading row, total fields expected: {}", fields);
+
+        for x in 0..fields {
+            debug!("Reading field");
+            let field = cur.read_u16::<BigEndian>()
+                                .expect("Expecting Field id");
+            debug!("Field: {}", field);
+            let size = cur.read_u64::<BigEndian>()
+                               .expect("Expecting Field length");
+
+            let mut data = Vec::with_capacity(size as usize);
+            {
+                cur.by_ref().take(size).read(&mut data);
+            }
+
+//            let data = cur[10..];
+        }
+
         Row::empty()
     }
 }
@@ -59,7 +80,7 @@ impl Row {
     */
     pub fn to_vec(&self) -> Vec<u8> {
         let mut buffer = vec![];
-
+        debug!("Writing row to bytes");
         // header is just the number of fields
         let fields = self.fields.len() as u16;
 
@@ -74,7 +95,6 @@ impl Row {
         buffer
     }
 
-//    fn get_string(&self, field: u8) ->
 }
 
 #[cfg(test)]
@@ -83,10 +103,27 @@ mod tests {
     use db::value::Value;
     use super::*;
 
+    extern crate env_logger;
+
+
     #[test]
     fn test_indexing() {
         let mut fields = HashMap::new();
         fields.insert(0, Value::from("test"));
         let r = Row::new(fields);
+    }
+
+    #[test]
+    fn test_reading_and_writing_row() {
+        let _ = env_logger::init();
+        info!("HEY");
+        let mut fields = HashMap::new();
+        fields.insert(0, Value::from("test"));
+        fields.insert(1, Value::from(50));
+        let r = Row::new(fields).expect("Valid row");
+
+        let encoded = r.to_vec();
+        let decoded = Row::from(encoded.as_slice());
+
     }
 }
