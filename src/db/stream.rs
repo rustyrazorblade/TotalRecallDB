@@ -60,7 +60,7 @@ impl Stream {
     */
     pub fn insert(&mut self, mut row_builder: RowBuilder) -> Result<u64, StreamError> {
         // validate the inserted data
-        let mut row_map : HashMap<u8, Value> = HashMap::new();
+        let mut row_map : HashMap<u16, Value> = HashMap::new();
         for (key, val) in row_builder.data.drain() {
             // get the field from the schema
             // TypeDef

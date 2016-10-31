@@ -7,7 +7,7 @@
 extern crate nom;
 extern crate clap;
 extern crate termion;
-
+extern crate byteorder;
 
 mod db;
 
