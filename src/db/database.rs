@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use super::stream::{Stream, StreamError};
 use super::parser::{parse_statement, Statement, ParseError, ColumnSpec};
-use super::row::row_builder::RowBuilder;
+use super::row::builder::RowBuilder;
 
 #[derive(Debug, PartialEq)]
 pub enum DatabaseError {
