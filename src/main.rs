@@ -28,7 +28,7 @@ use termion::{color, style};
 
 
 fn main() {
-    println!("Starting the worst database ever created!!");
+    println!("Starting the worst database ever created!! (exit to exit)");
     let server = Server::new();
     let app = App::new("StreamingDB")
                   .version("v1.0")
@@ -58,6 +58,11 @@ fn run_test_repl() {
 
         match TermRead::read_line(&mut stdin) {
             Ok(Some(buffer)) => {
+                if buffer == "exit" {
+                    write!(stdout, "Exiting\r\n");
+                    stdout.lock().flush().unwrap();
+                    return;
+                }
                 let x= match db.execute(&buffer) {
                     Ok(QueryResult::StreamCreated) =>
                         String::from("Stream Created.\n"),
