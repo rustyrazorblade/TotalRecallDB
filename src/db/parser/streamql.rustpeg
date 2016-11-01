@@ -143,7 +143,7 @@ and_or -> Operator
       "or" { Operator::Or }
 
 
-declare = "declare" __
+declare = "declare"i __
 
 int -> i64
     = "-"? [0-9]+ { match_str.parse().unwrap() }

@@ -9,7 +9,9 @@ mod integration_tests;
 peg_file! streamql("streamql.rustpeg");
 
 pub fn parse_statement(query: &str) -> Result<Statement, ParseError> {
-    statement(query)
+    let tmp = statement(query);
+    debug!("Parsed \"{}\" as query: \n{:?}", query, tmp);
+    tmp
 }
 
 #[derive(Debug)]

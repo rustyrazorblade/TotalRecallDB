@@ -8,6 +8,7 @@ extern crate nom;
 extern crate clap;
 extern crate termion;
 extern crate byteorder;
+extern crate env_logger;
 
 #[macro_use]
 extern crate log;
@@ -47,6 +48,8 @@ fn run_test_repl() {
     let mut stdin = stdin();
     let mut stdout = stdout();
     let prompt = "embedded>";
+
+    let _ = env_logger::init();
 
     loop {
 
