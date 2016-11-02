@@ -1,6 +1,7 @@
 pub use db::schema::Schema;
 pub use db::row::Row;
 pub use db::value::Value;
+use db::parser::Expression;
 
 pub struct RowReader<'a> {
     schema: &'a Schema,
@@ -17,6 +18,10 @@ impl<'a> RowReader<'a> {
             |field| self.row.get(field.id)
         );
         result
+    }
+    pub fn evaluate(&self, expression: Box<Expression>) -> bool {
+        debug!("Evaluating: {:?}", expression);
+        true
     }
 }
 
@@ -39,5 +44,8 @@ mod tests {
         // TODO make stream.get return the RowReader
         let result = stream.get(0).unwrap();
     }
+    #[test]
+    fn test_evaluate() {
 
+    }
 }

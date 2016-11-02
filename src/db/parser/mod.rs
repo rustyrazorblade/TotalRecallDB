@@ -32,7 +32,7 @@ pub enum Statement {
 // used for 2 expressions
 // 2 expressions must evaluate to a bool
 #[derive(Debug, PartialEq)]
-enum Operator {
+pub enum Operator {
     Equal,
     NotEqual,
     GreaterThan,
@@ -45,6 +45,7 @@ enum Operator {
     Minus,
     Multiply,
     Divide,
+    Like,
 }
 
 #[derive(Debug)]

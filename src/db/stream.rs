@@ -4,6 +4,7 @@ use std::error;
 use super::row::{Row, RowError, RowBuilder, RowReader};
 use super::schema::{Schema, Type};
 use super::value::Value;
+use super::parser::Expression;
 
 #[derive(Debug)]
 pub enum StreamError {
@@ -83,6 +84,11 @@ impl Stream {
         None
 
     }
+    pub fn select(&self, predicates: Box<Expression>) {
+
+    }
+
+
 
 
 }

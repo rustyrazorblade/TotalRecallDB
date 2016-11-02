@@ -11,4 +11,5 @@ pub mod storage;
 
 mod tests;
 
-use self::database::Database;
+pub use self::database::Database;
+pub use self::schema::Schema;
