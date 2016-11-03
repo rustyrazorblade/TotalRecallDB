@@ -19,6 +19,8 @@ impl<'a> RowReader<'a> {
         );
         result
     }
+
+    // checks if a row matches a given predicate
     pub fn evaluate(&self, expression: Box<Expression>) -> bool {
         debug!("Evaluating: {:?}", expression);
         true
@@ -44,8 +46,17 @@ mod tests {
         // TODO make stream.get return the RowReader
         let result = stream.get(0).unwrap();
     }
-    #[test]
-    fn test_evaluate() {
 
+    fn get_sample_schema() -> Schema {
+        let mut s = Schema::new();
+        s.add_type("name", Type::String);
+        s.add_type("age", Type::Int);
+        s
+    }
+
+    #[test]
+    fn test_evaluate_simple_equality() {
+        let s = get_sample_schema();
+        let row = RowBuilder::new();
     }
 }

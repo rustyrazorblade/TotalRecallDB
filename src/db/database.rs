@@ -68,6 +68,7 @@ impl Database {
         self.tables.get_mut(name)
     }
 
+
     pub fn execute(&mut self, query: &str) -> Result<QueryResult, DatabaseError> {
         let tmp = try!(parse_statement(query));
 
@@ -85,8 +86,9 @@ impl Database {
 
     pub fn select(&self, stream: &str, predicates: Option<Box<Expression>>) ->
                     Result<QueryResult, DatabaseError> {
-        let s = try!(self.get_stream(stream).ok_or(DatabaseError::StreamNotFound));
-        let result = s.select(predicates);
+        let s = try!(self.get_stream(stream)
+                         .ok_or(DatabaseError::StreamNotFound));
+        let result = try!(s.select(predicates));
 
         Err(DatabaseError::UnknownError)
     }
