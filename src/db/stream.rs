@@ -5,6 +5,7 @@ use super::row::{Row, RowError, RowBuilder, RowReader};
 use super::schema::{Schema, Type};
 use super::value::Value;
 use super::parser::Expression;
+use std::ops::{Deref, DerefMut};
 
 #[derive(Debug)]
 pub enum StreamError {
@@ -32,9 +33,22 @@ pub struct Stream {
 
 }
 
-/**
-This is a weird DB.  There's no primary key, since everything is based off append only streaming
+// Stream should deref schema since it's going to be used a lot
+impl Deref for Stream {
+    type Target = Schema;
+    fn deref(&self) -> &Schema {
+        &self.schema
+    }
+}
+impl DerefMut for Stream {
+    fn deref_mut(&mut self) -> &mut Schema {
+        &mut self.schema
+    }
+}
 
+/**
+This is a weird DB.  There's no user defined primary key,
+since everything is based off append only streaming
 */
 impl Stream {
     pub fn new() -> Stream {
