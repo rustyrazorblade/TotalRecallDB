@@ -99,7 +99,7 @@ impl Stream {
         None
 
     }
-    pub fn select(&self, predicates: Box<Expression>) -> Result<(), StreamError> {
+    pub fn select(&self, predicates: Option<Box<Expression>>) -> Result<(), StreamError> {
         Err(StreamError::UnknownError)
     }
 

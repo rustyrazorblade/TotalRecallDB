@@ -60,6 +60,10 @@ impl Database {
         Ok(stream)
     }
 
+    fn get_stream(&self, name: &str) -> Option<&Stream> {
+        self.tables.get(name)
+    }
+
     fn get_stream_mut(&mut self, name: &str) -> Option<&mut Stream> {
         self.tables.get_mut(name)
     }
@@ -79,8 +83,11 @@ impl Database {
         result
     }
 
-    pub fn select(&self, table: &str, predicates: Option<Box<Expression>>) ->
+    pub fn select(&self, stream: &str, predicates: Option<Box<Expression>>) ->
                     Result<QueryResult, DatabaseError> {
+        let s = try!(self.get_stream(stream).ok_or(DatabaseError::StreamNotFound));
+        let result = s.select(predicates);
+
         Err(DatabaseError::UnknownError)
     }
 
