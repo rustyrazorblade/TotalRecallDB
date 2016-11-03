@@ -11,7 +11,8 @@ use std::ops::{Deref, DerefMut};
 pub enum StreamError {
     ValidationError(String),
     FieldNotFound(String),
-    MissingRowId
+    MissingRowId,
+    UnknownError,
 }
 
 impl From<RowError> for StreamError {
@@ -98,8 +99,8 @@ impl Stream {
         None
 
     }
-    pub fn select(&self, predicates: Box<Expression>) {
-
+    pub fn select(&self, predicates: Box<Expression>) -> Result<(), StreamError> {
+        Err(StreamError::UnknownError)
     }
 
 
