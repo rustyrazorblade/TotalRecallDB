@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use super::stream::{Stream, StreamError};
 use super::parser::{parse_statement, Statement, ParseError, ColumnSpec};
 use super::row::builder::RowBuilder;
+use super::parser::Expression;
 
 #[derive(Debug, PartialEq)]
 pub enum DatabaseError {
@@ -71,9 +72,16 @@ impl Database {
                 self.insert(&stream, row_builder),
             Statement::DeclareStream(stream, fields) =>
                 self.declare_stream(&stream, fields),
+            Statement::Select(table, predicates) =>
+                self.select(&table, predicates),
             _ => Err(DatabaseError::UnknownError)
         };
         result
+    }
+
+    pub fn select(&self, table: &str, predicates: Option<Box<Expression>>) ->
+                    Result<QueryResult, DatabaseError> {
+        Err(DatabaseError::UnknownError)
     }
 
     pub fn insert(&mut self, stream: &str, row_builder: RowBuilder) -> Result<QueryResult, DatabaseError> {
