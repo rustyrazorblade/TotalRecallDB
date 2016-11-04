@@ -17,7 +17,10 @@ pub enum StreamError {
 
 impl From<RowError> for StreamError {
     fn from(err: RowError) -> StreamError {
-        StreamError::MissingRowId
+        match err {
+            RowError::FieldNotFound(field) => StreamError::FieldNotFound(field),
+            _ => StreamError::MissingRowId
+        }
     }
 
 }
@@ -76,18 +79,10 @@ impl Stream {
     */
     pub fn insert(&mut self, mut row_builder: RowBuilder) -> Result<u64, StreamError> {
         // validate the inserted data
-        let mut row_map : HashMap<u16, Value> = HashMap::new();
-        for (key, val) in row_builder.data.drain() {
-            // get the field from the schema
-            // TypeDef
-            let tmp = try!(self.schema.get(&key)
-                               .ok_or(StreamError::FieldNotFound(key.to_string())));
-            row_map.insert(tmp.id, val);
-
-        }
         let row_id = self.inserts;
-        let row = try!(Row::new(row_map));
-        self.rows.insert(self.inserts, row.clone());
+        row_builder.set_int("_id", row_id as i64);
+        let row = try!(row_builder.to_row(&self.schema));
+        self.rows.insert(self.inserts, row);
         self.inserts += 1;
         Ok(row_id)
     }

@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 use db::value::Value;
+use super::row::{RowError, Row};
+use db::schema::Schema;
 
 #[derive(Debug)]
 pub struct RowBuilder {
@@ -24,5 +26,18 @@ impl RowBuilder {
         self.data.insert(key.to_string(), val);
         self
 
+    }
+    pub fn to_row(mut self, schema: &Schema) -> Result<Row, RowError> {
+        let mut row_map : HashMap<u16, Value> = HashMap::new();
+        for (key, val) in self.data.drain() {
+            // get the field from the schema
+            // TypeDef
+            let tmp = try!(schema.get(&key)
+                .ok_or(RowError::FieldNotFound(key.to_string())));
+            row_map.insert(tmp.id, val);
+
+        }
+
+        Row::new(row_map)
     }
 }

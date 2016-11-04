@@ -56,7 +56,9 @@ mod tests {
 
     #[test]
     fn test_evaluate_simple_equality() {
-        let s = get_sample_schema();
-        let row = RowBuilder::new();
+        let s = get_sample_schema(); // name & age
+        let mut row = RowBuilder::new();
+        row.set_string("name", "jon");
+        row.set_int("age", 35);
     }
 }

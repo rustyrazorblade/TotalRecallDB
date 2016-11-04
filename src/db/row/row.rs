@@ -10,7 +10,8 @@ use byteorder::{BigEndian, WriteBytesExt, ReadBytesExt};
 
 #[derive(Debug, PartialEq)]
 pub enum RowError {
-    MissingId
+    MissingId,
+    FieldNotFound(String),
 }
 
 

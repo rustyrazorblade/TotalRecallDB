@@ -57,7 +57,7 @@ fn test_schema_validation() {
     if let DatabaseError::FieldNotFound(x) = db.execute("insert into users set name = 'Jon', age = 35, pie=3;").unwrap_err() {
 
     } else {
-        panic!("So much fail");
+        panic!("Was expecting a FieldNotFound for pie");
     }
 }
 
