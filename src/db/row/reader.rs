@@ -1,7 +1,9 @@
+#![feature(box_syntax, box_patterns)]
+
 pub use db::schema::Schema;
 pub use db::row::Row;
 pub use db::value::Value;
-use db::parser::Expression;
+use db::parser::{Expression, Operator};
 
 pub struct RowReader<'a> {
     schema: &'a Schema,
@@ -24,6 +26,10 @@ impl<'a> RowReader<'a> {
     pub fn evaluate(&self, expression: Box<Expression>) -> bool {
         debug!("Evaluating: {:?}", expression);
         true
+    }
+
+    pub fn e(&self, expression: Box<Expression>) -> Value {
+        Value::from(false)
     }
 }
 

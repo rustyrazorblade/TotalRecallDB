@@ -8,6 +8,7 @@ pub enum Type {
     Int,
     String,
     Timestamp,
+    Bool,
 }
 
 

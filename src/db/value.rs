@@ -51,6 +51,15 @@ impl<'a> From<&'a str> for Value {
     }
 }
 
+impl From<bool> for Value {
+    fn from(val: bool) -> Value {
+        let x  = val as u8;
+        let mut buffer = Vec::new();
+        buffer.write_u8(x).unwrap();
+        Value { data: buffer }
+    }
+}
+
 impl<'a> From<&'a [u8]> for Value {
     fn from(bytes: &'a [u8]) -> Value {
         let mut v : Vec<u8> = Vec::new();
