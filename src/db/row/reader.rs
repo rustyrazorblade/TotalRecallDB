@@ -23,12 +23,31 @@ impl<'a> RowReader<'a> {
     }
 
     // checks if a row matches a given predicate
+    // i'm going to assume here all the type checks have been done
+    // so tests are going to pass that reference evaluate directly
     pub fn evaluate(&self, expression: Box<Expression>) -> bool {
         debug!("Evaluating: {:?}", expression);
         self.e(expression).to_bool()
     }
 
-    pub fn e(&self, expression: Box<Expression>) -> Value {
+    // internal evaluation, returning Values all the way up
+    fn e(&self, expression: Box<Expression>) -> Value {
+        debug!("E: {:?}", expression);
+        match *expression {
+            Expression::Value(v) => v,
+//            Expression::Field(s) => *self.get(&s).unwrap(),
+
+            _ => Value::from(false)
+        }
+    }
+
+    fn compare(&self, operator: Operator,
+               lhs: Box<Expression>,
+               rhs: Box<Expression>) -> Value {
+
+        // finish the evaluation of the left and right sides
+        let l = self.e(lhs);
+        let r = self.e(rhs);
         Value::from(false)
     }
 }
