@@ -13,12 +13,17 @@ pub struct Value {
 }
 
 impl Value {
-    fn to_int(&self) -> i64 {
+    pub fn to_int(&self) -> i64 {
         let mut cur = Cursor::new(self.data.clone());
         cur.read_i64::<BigEndian>().unwrap()
     }
-    fn to_string(&self) -> String {
+    pub fn to_string(&self) -> String {
         String::from_utf8(self.data.clone()).unwrap()
+    }
+    pub fn to_bool(&self) -> bool {
+        let mut cur = Cursor::new(self.data.clone());
+        cur.read_u8().unwrap() == 1
+
     }
     pub fn as_slice(&self) -> &[u8] {
         self.data.as_ref()
@@ -177,5 +182,16 @@ mod tests {
         assert!(tmp.data.len() > 10);
         let x = tmp.to_string();
         assert_eq!(x, "this is a test");
+    }
+
+    #[test]
+    fn test_bool_value() {
+        let x = Value::from(true);
+        let y = x.to_bool();
+        assert!(y);
+
+        let x = Value::from(false);
+        let y = x.to_bool();
+        assert!(!y);
     }
 }

@@ -25,7 +25,7 @@ impl<'a> RowReader<'a> {
     // checks if a row matches a given predicate
     pub fn evaluate(&self, expression: Box<Expression>) -> bool {
         debug!("Evaluating: {:?}", expression);
-        true
+        self.e(expression).to_bool()
     }
 
     pub fn e(&self, expression: Box<Expression>) -> Value {
