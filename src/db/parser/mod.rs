@@ -3,7 +3,7 @@ pub use self::streamql::ParseError;
 use db::row::RowBuilder;
 use super::schema::Type;
 use super::value::Value;
-
+pub use self::streamql::where_clause;
 mod integration_tests;
 
 peg_file! streamql("streamql.rustpeg");
