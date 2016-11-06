@@ -7,11 +7,11 @@ use db::parser::{Expression, Operator};
 
 pub struct RowReader<'a> {
     schema: &'a Schema,
-    row: &'a Row
+    row: Row
 }
 
 impl<'a> RowReader<'a> {
-    pub fn new(schema: &'a Schema, row: &'a Row) -> RowReader<'a> {
+    pub fn new(schema: &'a Schema, row: Row) -> RowReader<'a> {
         RowReader{schema: schema, row: row}
     }
     pub fn get(&self, name: &str) -> Option<&Value> {

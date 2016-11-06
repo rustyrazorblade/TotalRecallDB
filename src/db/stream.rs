@@ -89,7 +89,7 @@ impl Stream {
 
     pub fn get(&self, position: u64) -> Option<RowReader> {
         if let Some(tmp) = self.rows.get(&position) {
-            return Some(RowReader::new(&self.schema, &tmp));
+            return Some(RowReader::new(&self.schema, tmp.clone()));
         }
         None
 

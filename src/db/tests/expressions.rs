@@ -13,7 +13,7 @@ fn test_evaluate_simple_equality() {
     rb.set_int("age", 35);
 
     let row = rb.to_row(&s).expect("Was expecting a valid row");
-    let reader = RowReader::new(&s, &row);
+    let reader = RowReader::new(&s, row);
 
     let p = where_clause("WHERE age = 35").expect("where age = 35");
     info!("WHERE age = 35 -> {:?}", p);
