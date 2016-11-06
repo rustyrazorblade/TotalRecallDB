@@ -143,7 +143,7 @@ mod tests {
     use db::row::RowBuilder;
 
     use db::schema::{Schema, Type};
-    use db::value::{Value, ValueComparator};
+    use db::value::{Value, TypedValue};
     use std::collections::HashMap;
     use self::test::Bencher;
 
@@ -227,8 +227,8 @@ mod tests {
         // SELECT * from X where age > 25
         let c = Value::from(40);
         let mut i = 0;
-        for row in s.into_iter().filter(|ref x| ValueComparator::new(x.get("age").unwrap(), Type::Int) >
-                                                ValueComparator::new(&c, Type::Int) )  {
+        for row in s.into_iter().filter(|ref x| TypedValue::new(x.get("age").unwrap(), Type::Int) >
+                                                TypedValue::new(&c, Type::Int) )  {
             i = i + 1;
         }
         assert_eq!(i, 5);

@@ -75,19 +75,19 @@ impl<'a> From<&'a [u8]> for Value {
 
 
 #[derive(Debug)]
-pub struct ValueComparator<'a> {
+pub struct TypedValue<'a> {
     val: &'a Value,
     dtype: Type,
 }
 
-impl<'a> ValueComparator<'a> {
-    pub fn new(val: &Value, dtype: Type) -> ValueComparator {
-        ValueComparator{val:val, dtype:dtype}
+impl<'a> TypedValue<'a> {
+    pub fn new(val: &Value, dtype: Type) -> TypedValue {
+        TypedValue {val:val, dtype:dtype}
     }
 }
 
-impl<'a> Ord for ValueComparator<'a> {
-    fn cmp(&self, other: &ValueComparator) -> Ordering {
+impl<'a> Ord for TypedValue<'a> {
+    fn cmp(&self, other: &TypedValue) -> Ordering {
         match (&self.dtype, &other.dtype) {
             (&Type::Int, &Type::Int) => self.val.to_int().cmp(&other.val.to_int()),
             (&Type::String, &Type::String) => self.val.to_string().cmp(&other.val.to_string()),
@@ -96,8 +96,8 @@ impl<'a> Ord for ValueComparator<'a> {
     }
 }
 
-impl<'a> PartialEq for ValueComparator<'a> {
-    fn eq(&self, other: &ValueComparator) -> bool {
+impl<'a> PartialEq for TypedValue<'a> {
+    fn eq(&self, other: &TypedValue) -> bool {
         match (&self.dtype, &other.dtype) {
             (&Type::Int, &Type::Int) => self.val.to_int() == other.val.to_int(),
             (&Type::String, &Type::String) => self.val.to_string() == other.val.to_string(),
@@ -106,10 +106,10 @@ impl<'a> PartialEq for ValueComparator<'a> {
     }
 }
 
-impl<'a> Eq for ValueComparator<'a> {}
+impl<'a> Eq for TypedValue<'a> {}
 
-impl<'a> PartialOrd for ValueComparator<'a> {
-    fn partial_cmp(&self, other: &ValueComparator) -> Option<Ordering> {
+impl<'a> PartialOrd for TypedValue<'a> {
+    fn partial_cmp(&self, other: &TypedValue) -> Option<Ordering> {
         Some(self.cmp(other))
     }
 }
@@ -117,7 +117,7 @@ impl<'a> PartialOrd for ValueComparator<'a> {
 #[cfg(test)]
 mod tests {
     extern crate env_logger;
-    use super::{Value, ValueComparator};
+    use super::{Value, TypedValue};
     use db::schema::Type;
 
     #[test]
@@ -135,26 +135,26 @@ mod tests {
         let mut x = Value::from(1);
         let mut y = Value::from(1);
 
-        assert_eq!(ValueComparator::new(&x, Type::Int),
-                   ValueComparator::new(&y, Type::Int));
+        assert_eq!(TypedValue::new(&x, Type::Int),
+                   TypedValue::new(&y, Type::Int));
 
         let mut x = Value::from(2);
         let mut y = Value::from(1);
 
-        assert!(ValueComparator::new(&x, Type::Int) >
-                ValueComparator::new(&y, Type::Int));
+        assert!(TypedValue::new(&x, Type::Int) >
+                TypedValue::new(&y, Type::Int));
 
         let mut x = Value::from(1);
         let mut y = Value::from(2);
 
-        assert!(ValueComparator::new(&y, Type::Int) >
-                ValueComparator::new(&x, Type::Int));
+        assert!(TypedValue::new(&y, Type::Int) >
+                TypedValue::new(&x, Type::Int));
 
         let mut x = Value::from(-1);
         let mut y = Value::from(2);
 
-        assert!(ValueComparator::new(&y, Type::Int) >
-                ValueComparator::new(&x, Type::Int));
+        assert!(TypedValue::new(&y, Type::Int) >
+                TypedValue::new(&x, Type::Int));
 
     }
 
