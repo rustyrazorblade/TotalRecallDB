@@ -75,18 +75,18 @@ impl<'a> From<&'a [u8]> for Value {
 
 
 #[derive(Debug)]
-pub struct TypedValue<'a> {
-    val: &'a Value,
+pub struct TypedValue {
+    val: Value,
     dtype: Type,
 }
 
-impl<'a> TypedValue<'a> {
-    pub fn new(val: &Value, dtype: Type) -> TypedValue {
+impl TypedValue {
+    pub fn new(val: Value, dtype: Type) -> TypedValue {
         TypedValue {val:val, dtype:dtype}
     }
 }
 
-impl<'a> Ord for TypedValue<'a> {
+impl Ord for TypedValue {
     fn cmp(&self, other: &TypedValue) -> Ordering {
         match (&self.dtype, &other.dtype) {
             (&Type::Int, &Type::Int) => self.val.to_int().cmp(&other.val.to_int()),
@@ -96,7 +96,7 @@ impl<'a> Ord for TypedValue<'a> {
     }
 }
 
-impl<'a> PartialEq for TypedValue<'a> {
+impl PartialEq for TypedValue {
     fn eq(&self, other: &TypedValue) -> bool {
         match (&self.dtype, &other.dtype) {
             (&Type::Int, &Type::Int) => self.val.to_int() == other.val.to_int(),
@@ -106,9 +106,9 @@ impl<'a> PartialEq for TypedValue<'a> {
     }
 }
 
-impl<'a> Eq for TypedValue<'a> {}
+impl Eq for TypedValue {}
 
-impl<'a> PartialOrd for TypedValue<'a> {
+impl PartialOrd for TypedValue {
     fn partial_cmp(&self, other: &TypedValue) -> Option<Ordering> {
         Some(self.cmp(other))
     }
@@ -135,26 +135,26 @@ mod tests {
         let mut x = Value::from(1);
         let mut y = Value::from(1);
 
-        assert_eq!(TypedValue::new(&x, Type::Int),
-                   TypedValue::new(&y, Type::Int));
+        assert_eq!(TypedValue::new(x, Type::Int),
+                   TypedValue::new(y, Type::Int));
 
         let mut x = Value::from(2);
         let mut y = Value::from(1);
 
-        assert!(TypedValue::new(&x, Type::Int) >
-                TypedValue::new(&y, Type::Int));
+        assert!(TypedValue::new(x, Type::Int) >
+                TypedValue::new(y, Type::Int));
 
         let mut x = Value::from(1);
         let mut y = Value::from(2);
 
-        assert!(TypedValue::new(&y, Type::Int) >
-                TypedValue::new(&x, Type::Int));
+        assert!(TypedValue::new(y, Type::Int) >
+                TypedValue::new(x, Type::Int));
 
         let mut x = Value::from(-1);
         let mut y = Value::from(2);
 
-        assert!(TypedValue::new(&y, Type::Int) >
-                TypedValue::new(&x, Type::Int));
+        assert!(TypedValue::new(y, Type::Int) >
+                TypedValue::new(x, Type::Int));
 
     }
 
