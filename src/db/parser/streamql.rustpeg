@@ -1,8 +1,8 @@
 use super::Statement;
-use db::value::Value;
+use db::value::{Value, TypedValue};
 use db::row::RowBuilder;
 use super::{ColumnSpec, Operator, Expression, Fields};
-use db::schema::Type;
+use db::schema::{Type};
 
 #[pub]
 statement -> Statement
@@ -45,7 +45,7 @@ field_value_list -> RowBuilder
     {
         let mut r = RowBuilder::new();
         for (k, v) in s.into_iter() {
-            r.set(&k, v);
+            r.set(&k, v.clone());
         }
         r
     }
@@ -88,7 +88,7 @@ column_spec -> ColumnSpec
 
 // this is used for inserts
 #[pub]
-field_equals_value -> (String, Value)
+field_equals_value -> (String, TypedValue)
     = __ f:field __ equals  v:value __ { (f, v) }
 
 equals= "=" __
@@ -103,17 +103,20 @@ table_name -> String
     = [a-zA-Z_]+  { match_str.to_string() }
 
 #[pub]
-value -> Value
+value -> TypedValue
     = int_value / string_value
 
 #[pub]
-int_value -> Value
-    = int:int { Value::from(int) }
+int_value -> TypedValue
+    = int:int
+    {
+        TypedValue::new(Value::from(int), Type::Int)
+    }
 
 #[pub]
-string_value -> Value
+string_value -> TypedValue
     = s:quoted_string
-    { Value::from(s) }
+    { TypedValue::new(Value::from(s), Type::String) }
 
 #[pub]
 quoted_string -> String
@@ -179,7 +182,7 @@ expression_grouped -> Box<Expression>
 #[pub]
 expression_value -> Box<Expression>
     = v:value
-    { Box::new( Expression::Value( Value::from(v) ) ) }
+    { Box::new( Expression::Value( TypedValue::from(v) ) ) }
 
 #[pub]
 expression_field -> Box<Expression>

@@ -2,8 +2,8 @@ use self::streamql::statement;
 pub use self::streamql::ParseError;
 use db::row::RowBuilder;
 use super::schema::Type;
-use super::value::Value;
-
+use super::value::{Value, TypedValue};
+pub use self::streamql::where_clause;
 mod integration_tests;
 
 peg_file! streamql("streamql.rustpeg");
@@ -58,7 +58,7 @@ pub enum Fields {
 
 #[derive(Debug)]
 pub enum Expression {
-    Value(Value),
+    Value(TypedValue),
     Comparison(Operator, Box<Expression>, Box<Expression>),
     Function(String, Vec<Expression> ),
     Field(String), // field name
@@ -83,7 +83,7 @@ mod test {
     use super::parse_statement;
     use super::{Statement, Expression, Operator};
     use super::streamql::*;
-    use db::value::Value;
+    use db::value::{Value, TypedValue};
 
     #[test]
     fn test_basic_insert() {
@@ -133,7 +133,7 @@ mod test {
     #[test]
     fn value_string_parsing() {
         let x = "'hello'";
-        if Value::from(x) == value(x).unwrap() {
+        if TypedValue::from(x) == value(x).unwrap() {
             assert_eq!(x, "hello");
         }
 

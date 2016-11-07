@@ -1,15 +1,17 @@
+#![feature(box_syntax, box_patterns)]
+
 pub use db::schema::Schema;
 pub use db::row::Row;
-pub use db::value::Value;
-use db::parser::Expression;
+pub use db::value::{Value, TypedValue};
+use db::parser::{Expression, Operator};
 
 pub struct RowReader<'a> {
     schema: &'a Schema,
-    row: &'a Row
+    row: Row
 }
 
 impl<'a> RowReader<'a> {
-    pub fn new(schema: &'a Schema, row: &'a Row) -> RowReader<'a> {
+    pub fn new(schema: &'a Schema, row: Row) -> RowReader<'a> {
         RowReader{schema: schema, row: row}
     }
     pub fn get(&self, name: &str) -> Option<&Value> {
@@ -21,9 +23,32 @@ impl<'a> RowReader<'a> {
     }
 
     // checks if a row matches a given predicate
+    // i'm going to assume here all the type checks have been done
+    // so tests are going to pass that reference evaluate directly
     pub fn evaluate(&self, expression: Box<Expression>) -> bool {
         debug!("Evaluating: {:?}", expression);
-        true
+        self.e(expression).to_bool()
+    }
+
+    // internal evaluation, returning Values all the way up
+    fn e(&self, expression: Box<Expression>) -> TypedValue {
+        debug!("E: {:?}", expression);
+        match *expression {
+            Expression::Value(v) => v,
+//            Expression::Field(s) => *self.get(&s).unwrap(),
+
+            _ => TypedValue::from(false)
+        }
+    }
+
+    fn compare(&self, operator: Operator,
+               lhs: Box<Expression>,
+               rhs: Box<Expression>) -> Value {
+
+        // finish the evaluation of the left and right sides
+        let l = self.e(lhs);
+        let r = self.e(rhs);
+        Value::from(false)
     }
 }
 
@@ -47,18 +72,5 @@ mod tests {
         let result = stream.get(0).unwrap();
     }
 
-    fn get_sample_schema() -> Schema {
-        let mut s = Schema::new();
-        s.add_type("name", Type::String);
-        s.add_type("age", Type::Int);
-        s
-    }
 
-    #[test]
-    fn test_evaluate_simple_equality() {
-        let s = get_sample_schema(); // name & age
-        let mut row = RowBuilder::new();
-        row.set_string("name", "jon");
-        row.set_int("age", 35);
-    }
 }

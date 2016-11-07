@@ -13,12 +13,17 @@ pub struct Value {
 }
 
 impl Value {
-    fn to_int(&self) -> i64 {
+    pub fn to_int(&self) -> i64 {
         let mut cur = Cursor::new(self.data.clone());
         cur.read_i64::<BigEndian>().unwrap()
     }
-    fn to_string(&self) -> String {
+    pub fn to_string(&self) -> String {
         String::from_utf8(self.data.clone()).unwrap()
+    }
+    pub fn to_bool(&self) -> bool {
+        let mut cur = Cursor::new(self.data.clone());
+        cur.read_u8().unwrap() == 1
+
     }
     pub fn as_slice(&self) -> &[u8] {
         self.data.as_ref()
@@ -51,6 +56,15 @@ impl<'a> From<&'a str> for Value {
     }
 }
 
+impl From<bool> for Value {
+    fn from(val: bool) -> Value {
+        let x  = val as u8;
+        let mut buffer = Vec::new();
+        buffer.write_u8(x).unwrap();
+        Value { data: buffer }
+    }
+}
+
 impl<'a> From<&'a [u8]> for Value {
     fn from(bytes: &'a [u8]) -> Value {
         let mut v : Vec<u8> = Vec::new();
@@ -61,19 +75,19 @@ impl<'a> From<&'a [u8]> for Value {
 
 
 #[derive(Debug)]
-pub struct ValueComparator<'a> {
-    val: &'a Value,
+pub struct TypedValue {
+    val: Value,
     dtype: Type,
 }
 
-impl<'a> ValueComparator<'a> {
-    pub fn new(val: &Value, dtype: Type) -> ValueComparator {
-        ValueComparator{val:val, dtype:dtype}
+impl TypedValue {
+    pub fn new(val: Value, dtype: Type) -> TypedValue {
+        TypedValue {val:val, dtype:dtype}
     }
 }
 
-impl<'a> Ord for ValueComparator<'a> {
-    fn cmp(&self, other: &ValueComparator) -> Ordering {
+impl Ord for TypedValue {
+    fn cmp(&self, other: &TypedValue) -> Ordering {
         match (&self.dtype, &other.dtype) {
             (&Type::Int, &Type::Int) => self.val.to_int().cmp(&other.val.to_int()),
             (&Type::String, &Type::String) => self.val.to_string().cmp(&other.val.to_string()),
@@ -82,8 +96,8 @@ impl<'a> Ord for ValueComparator<'a> {
     }
 }
 
-impl<'a> PartialEq for ValueComparator<'a> {
-    fn eq(&self, other: &ValueComparator) -> bool {
+impl PartialEq for TypedValue {
+    fn eq(&self, other: &TypedValue) -> bool {
         match (&self.dtype, &other.dtype) {
             (&Type::Int, &Type::Int) => self.val.to_int() == other.val.to_int(),
             (&Type::String, &Type::String) => self.val.to_string() == other.val.to_string(),
@@ -92,18 +106,53 @@ impl<'a> PartialEq for ValueComparator<'a> {
     }
 }
 
-impl<'a> Eq for ValueComparator<'a> {}
+impl From<i64> for TypedValue {
+    fn from(val: i64) -> TypedValue {
+        let v = Value::from(val);
+        TypedValue::new(v, Type::Int)
+    }
+}
 
-impl<'a> PartialOrd for ValueComparator<'a> {
-    fn partial_cmp(&self, other: &ValueComparator) -> Option<Ordering> {
+impl From<bool> for TypedValue {
+    fn from(val: bool) -> TypedValue {
+        let v = Value::from(val);
+        TypedValue::new(v, Type::Bool)
+    }
+}
+
+impl From<String> for TypedValue {
+    fn from(val: String) -> TypedValue {
+        let v = Value::from(val);
+        TypedValue::new(v, Type::String)
+    }
+}
+
+impl<'a> From<&'a str> for TypedValue {
+    fn from(val: &'a str) -> TypedValue {
+        let v = Value::from(val);
+        TypedValue::new(v, Type::String)
+    }
+}
+
+impl Eq for TypedValue {}
+
+impl PartialOrd for TypedValue {
+    fn partial_cmp(&self, other: &TypedValue) -> Option<Ordering> {
         Some(self.cmp(other))
+    }
+}
+
+impl Deref for TypedValue {
+    type Target = Value;
+    fn deref(&self) -> &Value {
+        &self.val
     }
 }
 
 #[cfg(test)]
 mod tests {
     extern crate env_logger;
-    use super::{Value, ValueComparator};
+    use super::{Value, TypedValue};
     use db::schema::Type;
 
     #[test]
@@ -121,26 +170,26 @@ mod tests {
         let mut x = Value::from(1);
         let mut y = Value::from(1);
 
-        assert_eq!(ValueComparator::new(&x, Type::Int),
-                   ValueComparator::new(&y, Type::Int));
+        assert_eq!(TypedValue::new(x, Type::Int),
+                   TypedValue::new(y, Type::Int));
 
         let mut x = Value::from(2);
         let mut y = Value::from(1);
 
-        assert!(ValueComparator::new(&x, Type::Int) >
-                ValueComparator::new(&y, Type::Int));
+        assert!(TypedValue::new(x, Type::Int) >
+                TypedValue::new(y, Type::Int));
 
         let mut x = Value::from(1);
         let mut y = Value::from(2);
 
-        assert!(ValueComparator::new(&y, Type::Int) >
-                ValueComparator::new(&x, Type::Int));
+        assert!(TypedValue::new(y, Type::Int) >
+                TypedValue::new(x, Type::Int));
 
         let mut x = Value::from(-1);
         let mut y = Value::from(2);
 
-        assert!(ValueComparator::new(&y, Type::Int) >
-                ValueComparator::new(&x, Type::Int));
+        assert!(TypedValue::new(y, Type::Int) >
+                TypedValue::new(x, Type::Int));
 
     }
 
@@ -168,5 +217,16 @@ mod tests {
         assert!(tmp.data.len() > 10);
         let x = tmp.to_string();
         assert_eq!(x, "this is a test");
+    }
+
+    #[test]
+    fn test_bool_value() {
+        let x = Value::from(true);
+        let y = x.to_bool();
+        assert!(y);
+
+        let x = Value::from(false);
+        let y = x.to_bool();
+        assert!(!y);
     }
 }

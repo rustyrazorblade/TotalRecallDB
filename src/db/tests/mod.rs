@@ -1,10 +1,19 @@
 
 pub mod parser;
+pub mod expressions;
 
 use db::Database;
-use db::schema::Type;
+use db::schema::{Type, Schema};
 use db::stream::Stream;
 use db::row::RowBuilder;
+
+
+fn get_sample_schema() -> Schema {
+    let mut s = Schema::new();
+    s.add_type("name", Type::String);
+    s.add_type("age", Type::Int);
+    s
+}
 
 fn create_test_db() -> Database {
     let mut db = Database::new();
