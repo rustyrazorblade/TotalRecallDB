@@ -22,7 +22,15 @@ fn test_evaluate_simple_equality() {
     assert!(reader.evaluate(&p)); // expecting true
     assert!(reader.evaluate(&p)); // expecting true again (make sure i didn't move p)
 
+
     let p = where_clause("WHERE age = 36").expect("where age = 36");
     assert!(!reader.evaluate(&p));
 
+    let p = where_clause("WHERE age > 30").expect("where age > 30");
+    assert!(reader.evaluate(&p));
+
+    let p = where_clause("WHERE age < 40").expect("where age < 40");
+    assert!(reader.evaluate(&p));
+
 }
+

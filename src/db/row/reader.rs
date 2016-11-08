@@ -68,6 +68,10 @@ impl<'a> RowReader<'a> {
         // finish the evaluation of the left and right sides
         let tmp = match *operator {
             Operator::Equal => lhs == rhs,
+            Operator::GreaterThan => lhs > rhs,
+            Operator::GreaterThanEqual => lhs >= rhs,
+            Operator::LessThan => lhs < rhs,
+            Operator::LessThanEqual => lhs <= rhs,
             _ => false
         };
         TypedValue::from(tmp)
