@@ -72,7 +72,10 @@ impl<'a> RowReader<'a> {
             Operator::GreaterThanEqual => lhs >= rhs,
             Operator::LessThan => lhs < rhs,
             Operator::LessThanEqual => lhs <= rhs,
-            _ => false
+            x => {
+                debug!("Not sure what to do with operator {:?}", x);
+                false
+            }
         };
         TypedValue::from(tmp)
 

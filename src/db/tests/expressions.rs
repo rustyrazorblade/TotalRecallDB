@@ -32,5 +32,8 @@ fn test_evaluate_simple_equality() {
     let p = where_clause("WHERE age < 40").expect("where age < 40");
     assert!(reader.evaluate(&p));
 
+    let p = where_clause("WHERE name = 'jon' and age < 40").expect("where age < 40");
+    assert!(reader.evaluate(&p));
+
 }
 
