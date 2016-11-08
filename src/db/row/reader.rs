@@ -49,6 +49,7 @@ impl<'a> RowReader<'a> {
             },
             Expression::Comparison(ref operator, ref lhs, ref rhs) => {
                 debug!("Parser evaluating comparison operation {:?} and {:?}", lhs, rhs);
+                // TODO: push this into compare for lazy eval
                 let lhs2 = self.e(lhs);
                 let rhs2 = self.e(rhs);
                 self.compare(&operator, &lhs2, &rhs2)
@@ -72,7 +73,15 @@ impl<'a> RowReader<'a> {
             Operator::GreaterThanEqual => lhs >= rhs,
             Operator::LessThan => lhs < rhs,
             Operator::LessThanEqual => lhs <= rhs,
-            x => {
+            Operator::And => {
+                // need real bools
+                (*lhs).to_bool() && (*rhs).to_bool()
+            },
+            Operator::Or => {
+                // need real bools
+                (*lhs).to_bool() || (*rhs).to_bool()
+            },
+            ref x => {
                 debug!("Not sure what to do with operator {:?}", x);
                 false
             }

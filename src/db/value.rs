@@ -149,6 +149,7 @@ impl Deref for TypedValue {
     }
 }
 
+
 #[cfg(test)]
 mod tests {
     extern crate env_logger;

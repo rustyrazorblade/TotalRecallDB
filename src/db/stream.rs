@@ -221,20 +221,6 @@ mod tests {
         assert_eq!(i, 1);
     }
 
-    #[test]
-    fn test_chaining() {
-        let mut s = get_stream_with_data();
-        // SELECT * from X where age > 25
-        let c = Value::from(40);
-        let mut i = 0;
-//        for row in s.into_iter().filter(|ref x| TypedValue::new(x.get("age").unwrap().clone(), Type::Int) >
-//                                                TypedValue::new(c.clone(), Type::Int) )  {
-//            i = i + 1;
-//        }
-        assert_eq!(i, 5);
-
-    }
-
     #[bench]
     fn bench_add_two(b: &mut Bencher) {
         let mut stream = get_stream();
