@@ -185,14 +185,14 @@ mod tests {
         let row2 = s.get(result).unwrap();
         let name = row2.get("name").unwrap();
         // was the data inserted?
-        assert_eq!(*row2.get("name").unwrap(),
-                   Value::from("test"));
+        assert_eq!(row2.get("name").unwrap(),
+                   TypedValue::from("test"));
 
     }
 
     #[test]
     fn test_equality() {
-        assert_eq!(Value::from("jon"), Value::from("jon"));
+        assert_eq!(TypedValue::from("jon"), TypedValue::from("jon"));
     }
 
     #[test]

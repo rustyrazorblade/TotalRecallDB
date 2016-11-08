@@ -4,9 +4,10 @@ use super::get_sample_schema;
 use db::row::{RowBuilder, RowReader};
 use db::parser::parse_statement;
 use db::parser::where_clause;
+
 #[test]
 fn test_evaluate_simple_equality() {
-    env_logger::init();
+    let _ = env_logger::init();
     let s = get_sample_schema(); // name & age
     let mut rb = RowBuilder::new();
     rb.set_string("name", "jon");

@@ -14,10 +14,13 @@ impl<'a> RowReader<'a> {
     pub fn new(schema: &'a Schema, row: Row) -> RowReader<'a> {
         RowReader{schema: schema, row: row}
     }
-    pub fn get(&self, name: &str) -> Option<&Value> {
+    pub fn get(&self, name: &str) -> Option<TypedValue> {
 
         let result = self.schema.get(name).and_then(
             |field| self.row.get(field.id)
+        ).and_then(
+            |value| Some(TypedValue::new(value.clone(), self.schema.get(name).unwrap().dbtype.clone()))
+
         );
         result
     }

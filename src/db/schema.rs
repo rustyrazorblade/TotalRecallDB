@@ -3,7 +3,7 @@ use std::collections::HashMap;
 /*
 DB types
 */
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Type {
     Int,
     String,
@@ -16,7 +16,7 @@ pub enum Type {
 pub struct TypeDef {
     // id to be used in the on disk serialization
     pub id: u16,
-    dbtype: Type,
+    pub dbtype: Type,
 }
 // owned by a Stream
 #[derive(Debug)]
