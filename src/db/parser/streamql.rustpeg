@@ -45,7 +45,7 @@ field_value_list -> RowBuilder
     {
         let mut r = RowBuilder::new();
         for (k, v) in s.into_iter() {
-            r.set(&k, v.clone());
+            r.set(&k, (*v).clone());
         }
         r
     }

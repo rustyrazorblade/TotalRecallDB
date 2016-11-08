@@ -74,7 +74,7 @@ impl<'a> From<&'a [u8]> for Value {
 }
 
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct TypedValue {
     val: Value,
     dtype: Type,

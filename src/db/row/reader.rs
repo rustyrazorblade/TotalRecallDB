@@ -28,30 +28,50 @@ impl<'a> RowReader<'a> {
     // checks if a row matches a given predicate
     // i'm going to assume here all the type checks have been done
     // so tests are going to pass that reference evaluate directly
-    pub fn evaluate(&self, expression: Box<Expression>) -> bool {
+    pub fn evaluate(&self, expression: &Box<Expression>) -> bool {
         debug!("Evaluating: {:?}", expression);
         self.e(expression).to_bool()
     }
 
     // internal evaluation, returning Values all the way up
-    fn e(&self, expression: Box<Expression>) -> TypedValue {
+    fn e(&self, expression: &Box<Expression>) -> TypedValue {
         debug!("E: {:?}", expression);
-        match *expression {
-            Expression::Value(v) => v,
-//            Expression::Field(s) => *self.get(&s).unwrap(),
 
-            _ => TypedValue::from(false)
+        match **expression {
+            Expression::Value(ref v) => v.clone(),
+            Expression::Field(ref s) => {
+                // should return the value for the field
+                debug!("Getting value of field {:?}", s);
+                let tmp = self.get(&s).unwrap();
+                debug!("Returning value {:?} for expression Field({:?}", tmp, s);
+                tmp
+
+            },
+            Expression::Comparison(ref operator, ref lhs, ref rhs) => {
+                debug!("Parser evaluating comparison operation {:?} and {:?}", lhs, rhs);
+                let lhs2 = self.e(lhs);
+                let rhs2 = self.e(rhs);
+                self.compare(&operator, &lhs2, &rhs2)
+            },
+
+            _ => {
+                debug!("Not sure what to do on internal parser evaluation, returning false");
+                TypedValue::from(false)
+            }
         }
     }
 
-    fn compare(&self, operator: Operator,
-               lhs: Box<Expression>,
-               rhs: Box<Expression>) -> Value {
+    fn compare(&self, operator: &Operator,
+               lhs: &TypedValue,
+               rhs: &TypedValue) -> TypedValue {
 
         // finish the evaluation of the left and right sides
-        let l = self.e(lhs);
-        let r = self.e(rhs);
-        Value::from(false)
+        let tmp = match *operator {
+            Operator::Equal => lhs == rhs,
+            _ => false
+        };
+        TypedValue::from(tmp)
+
     }
 }
 
