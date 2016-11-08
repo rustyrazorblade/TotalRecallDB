@@ -222,7 +222,7 @@ mod tests {
     }
 
     #[bench]
-    fn bench_add_two(b: &mut Bencher) {
+    fn bench_row_insertion(b: &mut Bencher) {
         let mut stream = get_stream();
         // benched original row builder at 318 ns/iter (+/- 52)
         b.iter(|| {
