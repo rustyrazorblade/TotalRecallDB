@@ -3,7 +3,7 @@ use db::value::Value;
 use super::row::{RowError, Row};
 use db::schema::Schema;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct RowBuilder {
     pub data: HashMap<String, Value>,
 }

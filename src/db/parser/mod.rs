@@ -14,7 +14,7 @@ pub fn parse_statement(query: &str) -> Result<Statement, ParseError> {
     tmp
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Statement {
     // Stream & Keys
     Insert(String, RowBuilder),
@@ -31,7 +31,7 @@ pub enum Statement {
 // infix operators
 // used for 2 expressions
 // 2 expressions must evaluate to a bool
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Operator {
     Equal,
     NotEqual,
@@ -48,7 +48,7 @@ pub enum Operator {
     Like,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Fields {
     All,
     Named(Vec<String>),
@@ -56,7 +56,7 @@ pub enum Fields {
 
 
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Expression {
     Value(TypedValue),
     Comparison(Operator, Box<Expression>, Box<Expression>),
@@ -65,7 +65,7 @@ pub enum Expression {
     None,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ColumnSpec {
     pub name: String,
     pub ftype: Type,

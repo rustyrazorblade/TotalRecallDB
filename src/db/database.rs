@@ -15,7 +15,7 @@ pub enum DatabaseError {
 
 #[derive(Debug)]
 pub enum QueryResult {
-    ResultSet,
+    ResultSet(ResultSet),
     Insert(u64),
     StreamCreated,
 }
@@ -38,6 +38,16 @@ impl From<StreamError> for DatabaseError {
     }
 }
 
+#[derive(Debug)]
+struct ResultSet {
+    statement: Statement,
+    num_results: u64,
+}
+impl ResultSet {
+    fn new(statement: Statement) -> ResultSet {
+        ResultSet{num_results:0, statement: statement}
+    }
+}
 
 pub struct Database {
     tables: HashMap<String, Stream>
@@ -70,15 +80,19 @@ impl Database {
 
 
     pub fn execute(&mut self, query: &str) -> Result<QueryResult, DatabaseError> {
-        let tmp = try!(parse_statement(query));
-
-        let result = match tmp {
+        let parsed = try!(parse_statement(query));
+        let p2 = parsed.clone();
+        let result = match parsed {
             Statement::Insert(stream, row_builder) =>
                 self.insert(&stream, row_builder),
             Statement::DeclareStream(stream, fields) =>
                 self.declare_stream(&stream, fields),
-            Statement::Select(table, predicates) =>
-                self.select(&table, predicates),
+            Statement::Select(table, predicates) => {
+                // going to return the resultset now
+                // the expectation is that all the validation be done up front
+                let tmp = ResultSet::new(p2);
+                Ok(QueryResult::ResultSet(tmp))
+            }
             _ => Err(DatabaseError::UnknownError)
         };
         result
