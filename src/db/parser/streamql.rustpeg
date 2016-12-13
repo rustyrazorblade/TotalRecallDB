@@ -37,7 +37,7 @@ insert = "insert"i
 as = "as"i __
 
 table -> String
-    = [a-zA-Z_]+  { match_str.to_string() }
+    = n:$([a-zA-Z_]+)  { n.to_string() }
 
 #[pub]
 field_value_list -> RowBuilder
@@ -96,11 +96,11 @@ stream = "stream"i __
 
 #[pub]
 field -> String
-    = [a-zA-Z_]+  { match_str.to_string() }
+    = n:$([a-zA-Z_]+)  { n.to_string() }
 
 #[pub]
 table_name -> String
-    = [a-zA-Z_]+  { match_str.to_string() }
+    = n:$([a-zA-Z_]+)  { n.to_string() }
 
 #[pub]
 value -> TypedValue
@@ -124,8 +124,8 @@ quoted_string -> String
 
 #[pub]
 string -> String
-    = ([^'] / "''")*
-    { match_str.to_string().replace("''", "'") }
+    = n:$(([^'] / "''")*)
+    { n.to_string().replace("''", "'") }
 
 operator -> Operator
     = "=" { Operator::Equal } /
@@ -149,7 +149,7 @@ and_or -> Operator
 declare = "declare"i __
 
 int -> i64
-    = "-"? [0-9]+ { match_str.parse().unwrap() }
+    = n:$("-"? [0-9]+) { n.parse().unwrap() }
 
 
 // EXPRESSIONS, TIME FOR INSANITY
