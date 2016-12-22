@@ -12,3 +12,4 @@ clap = "*" # CLI parsing
 termion = "*"
 log = "*"
 env_logger = "*"
+vec_map = "*"

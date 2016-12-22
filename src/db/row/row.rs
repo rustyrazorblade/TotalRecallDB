@@ -1,12 +1,17 @@
+// system libs
 use std::time::{Duration, SystemTime};
 use std::collections::HashMap;
-use std::fmt;
-use db::value::Value;
-use super::Header;
 use std::io::Cursor;
 use std::io::Read;
-// big endian for life
+use std::fmt;
+
+// 3rd party
 use byteorder::{BigEndian, WriteBytesExt, ReadBytesExt};
+use vec_map::VecMap;
+
+// mine
+use db::value::Value;
+use super::Header;
 
 #[derive(Debug, PartialEq)]
 pub enum RowError {
@@ -20,7 +25,7 @@ pub enum RowError {
 #[derive(Clone)]
 pub struct Row {
 //    header: Header,
-    fields: HashMap<u16, Value>,
+    fields: VecMap<Value>,
 }
 
 
@@ -40,10 +45,10 @@ impl<'a> From<&'a [u8]> for Row {
                         .expect("no fields length");
 
         debug!("Reading row, total fields expected: {}", fields);
-        let mut hm = HashMap::new();
+        let mut hm = VecMap::new();
         for x in 0..fields {
             debug!("Reading field {}", x);
-            let field = cur.read_u16::<BigEndian>()
+            let field = cur.read_u64::<BigEndian>()
                                 .expect("Expecting Field id");
             debug!("Field: {}", field);
             let size = cur.read_u64::<BigEndian>()
@@ -61,7 +66,7 @@ impl<'a> From<&'a [u8]> for Row {
             //            hm.set(field, )
             let val = Value::from(&*data);
             debug!("Data: {:?}", val);
-            hm.insert(field, val);
+            hm.insert(field as usize, val);
         }
 
         Row::new(hm).unwrap()
@@ -69,15 +74,15 @@ impl<'a> From<&'a [u8]> for Row {
 }
 
 impl Row {
-    pub fn new(fields: HashMap<u16, Value>) -> Result<Row, RowError>  {
+    pub fn new(fields: VecMap<Value>) -> Result<Row, RowError>  {
         Ok(Row{fields: fields})
     }
 
-    pub fn get(&self, field: u16) -> Option<&Value> {
-        self.fields.get(&field)
+    pub fn get(&self, field: usize) -> Option<&Value> {
+        self.fields.get(field)
     }
     pub fn empty() -> Row {
-        Row{fields: HashMap::new()}
+        Row{fields: VecMap::new()}
     }
 
     /*
@@ -93,7 +98,7 @@ impl Row {
 
         for (k, v) in self.fields.iter()  {
             // write field (u16), size (u64), data
-            buffer.write_u16::<BigEndian>(*k);
+            buffer.write_u64::<BigEndian>(k as u64);
             buffer.write_u64::<BigEndian>(v.len());
             buffer.extend_from_slice(v.as_slice());
         }
@@ -113,7 +118,7 @@ mod tests {
 
     #[test]
     fn test_indexing() {
-        let mut fields = HashMap::new();
+        let mut fields = VecMap::new();
         fields.insert(0, Value::from("test"));
         let r = Row::new(fields);
     }
@@ -122,7 +127,7 @@ mod tests {
     fn test_reading_and_writing_row() {
         let _ = env_logger::init();
 
-        let mut fields = HashMap::new();
+        let mut fields = VecMap::new();
         fields.insert(0, Value::from("this is a test"));
 //        fields.insert(1, Value::from(50));
         let r = Row::new(fields).expect("Valid row");

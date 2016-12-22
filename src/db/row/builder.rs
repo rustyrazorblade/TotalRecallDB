@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use db::value::Value;
 use super::row::{RowError, Row};
 use db::schema::Schema;
+use vec_map::VecMap;
 
 #[derive(Debug, Clone)]
 pub struct RowBuilder {
@@ -28,13 +29,13 @@ impl RowBuilder {
 
     }
     pub fn to_row(mut self, schema: &Schema) -> Result<Row, RowError> {
-        let mut row_map : HashMap<u16, Value> = HashMap::new();
+        let mut row_map : VecMap<Value> = VecMap::new();
         for (key, val) in self.data.drain() {
             // get the field from the schema
             // TypeDef
             let tmp = schema.get(&key)
                             .ok_or(RowError::FieldNotFound(key.to_string()))?;
-            row_map.insert(tmp.id, val);
+            row_map.insert(tmp.id as usize, val);
 
         }
 

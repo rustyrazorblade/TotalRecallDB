@@ -9,6 +9,7 @@ extern crate clap;
 extern crate termion;
 extern crate byteorder;
 extern crate env_logger;
+extern crate vec_map;
 
 #[macro_use]
 extern crate log;

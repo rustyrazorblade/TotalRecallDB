@@ -17,7 +17,7 @@ impl<'a> RowReader<'a> {
     pub fn get(&self, name: &str) -> Option<TypedValue> {
 
         let result = self.schema.get(name).and_then(
-            |field| self.row.get(field.id)
+            |field| self.row.get(field.id as usize)
         ).and_then(
             |value| Some(TypedValue::new(value.clone(), self.schema.get(name).unwrap().dbtype.clone()))
 

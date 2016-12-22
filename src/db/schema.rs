@@ -15,13 +15,13 @@ pub enum Type {
 #[derive(Debug)]
 pub struct TypeDef {
     // id to be used in the on disk serialization
-    pub id: u16,
+    pub id: usize,
     pub dbtype: Type,
 }
 // owned by a Stream
 #[derive(Debug)]
 pub struct Schema {
-    num_fields: u16,
+    num_fields: usize,
     // maps a name to an id
     fields: HashMap<String, TypeDef>,
 }
@@ -31,7 +31,7 @@ impl Schema {
         Schema{num_fields: 0, fields: HashMap::new()}
     }
 
-    pub fn add_type(&mut self, name: &str, dbtype: Type) -> u16 {
+    pub fn add_type(&mut self, name: &str, dbtype: Type) -> usize {
         let next_id = self.num_fields + 1;
         let typedef = TypeDef{ id: next_id, dbtype: dbtype};
         self.fields.insert(name.to_string(), typedef);
