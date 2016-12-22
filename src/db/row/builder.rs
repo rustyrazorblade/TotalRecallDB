@@ -32,8 +32,8 @@ impl RowBuilder {
         for (key, val) in self.data.drain() {
             // get the field from the schema
             // TypeDef
-            let tmp = try!(schema.get(&key)
-                .ok_or(RowError::FieldNotFound(key.to_string())));
+            let tmp = schema.get(&key)
+                            .ok_or(RowError::FieldNotFound(key.to_string()))?;
             row_map.insert(tmp.id, val);
 
         }

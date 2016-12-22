@@ -80,7 +80,7 @@ impl Database {
 
 
     pub fn execute(&mut self, query: &str) -> Result<QueryResult, DatabaseError> {
-        let parsed = try!(parse_statement(query));
+        let parsed = parse_statement(query)?;
         let p2 = parsed.clone();
         let result = match parsed {
             Statement::Insert(stream, row_builder) =>
@@ -100,23 +100,23 @@ impl Database {
 
     pub fn select(&self, stream: &str, predicates: Option<Box<Expression>>) ->
                     Result<QueryResult, DatabaseError> {
-        let s = try!(self.get_stream(stream)
-                         .ok_or(DatabaseError::StreamNotFound));
-        let result = try!(s.select(predicates));
+        let result = self.get_stream(stream)
+                         .ok_or(DatabaseError::StreamNotFound)?
+                         .select(predicates)?;
 
         Err(DatabaseError::UnknownError)
     }
 
     pub fn insert(&mut self, stream: &str, row_builder: RowBuilder) -> Result<QueryResult, DatabaseError> {
-        let stream = try!(self.get_stream_mut(stream).ok_or(DatabaseError::StreamNotFound));
-        let id = try!(stream.insert(row_builder));
+        let stream = self.get_stream_mut(stream).ok_or(DatabaseError::StreamNotFound)?;
+        let id = stream.insert(row_builder)?;
         Ok(QueryResult::Insert(id))
     }
 
     pub fn declare_stream(&mut self,
                           stream: &str,
                           fields: Vec<ColumnSpec>) -> Result<QueryResult, DatabaseError> {
-        let stream = try!(self.create_stream(stream));
+        let stream = self.create_stream(stream)?;
         for col_spec in fields {
             stream.schema.add_type(&col_spec.name, col_spec.ftype);
         }

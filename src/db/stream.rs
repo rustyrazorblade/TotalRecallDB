@@ -81,7 +81,7 @@ impl Stream {
         // validate the inserted data
         let row_id = self.inserts;
         row_builder.set_int("_id", row_id as i64);
-        let row = try!(row_builder.to_row(&self.schema));
+        let row = row_builder.to_row(&self.schema)?;
         self.rows.insert(self.inserts, row);
         self.inserts += 1;
         Ok(row_id)
