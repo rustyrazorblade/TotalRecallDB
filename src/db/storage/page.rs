@@ -2,7 +2,7 @@ use db::row::Row;
 // mis info about what's on each page.
 const HEADER_SIZE_IN_BYTES : usize = 128;
 
-struct Page {
+pub struct Page {
     header: Header,
     data: [u8; 4096 - HEADER_SIZE_IN_BYTES],
     pos: u16,
