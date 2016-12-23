@@ -4,9 +4,13 @@ pub mod disk;
 
 use super::storage::page::Page;
 
-enum StorageError
+pub enum StorageError {
+    PageNotFound
+}
+
+type StorageResult<T> = Result<T, StorageError>;
 
 pub trait Storage {
-    fn get_page(u64) -> Page;
-    fn append(Page);
+    fn get_page(u64) -> StorageResult<Page>;
+//    fn append(Page);
 }
