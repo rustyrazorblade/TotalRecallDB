@@ -21,6 +21,8 @@ pub enum DatabaseError {
     FieldNotFound(String),
 }
 
+type DatabaseResult<T> = Result<T, DatabaseError>;
+
 #[derive(Debug)]
 pub enum QueryResult {
     ResultSet(ResultSet),
@@ -87,6 +89,11 @@ impl Database {
         }
         self.tables.insert(name.to_string(), tmp);
         let stream = self.tables.get_mut(name).unwrap();
+        Ok(stream)
+    }
+    pub fn create_temp_stream(&mut self) -> DatabaseResult<Stream> {
+        let storage = Memory::new().expect("Memory is failing uggghhh");
+        let mut stream = Stream::new(storage);
         Ok(stream)
     }
 
