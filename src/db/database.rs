@@ -78,7 +78,7 @@ impl Database {
         Database::new(tmpdir.into_path())
     }
 
-    pub fn create_stream(&mut self, name: &str) -> Result<&mut Stream, DatabaseError> {
+    pub fn create_stream(&mut self, name: &str) -> DatabaseResult<&mut Stream> {
         let mut p = self.path.clone();
         p.push(name);
         let storage = Disk::new(50, p).expect("Could not create disk storage");
@@ -134,7 +134,7 @@ impl Database {
         Err(DatabaseError::UnknownError)
     }
 
-    pub fn insert(&mut self, stream: &str, row_builder: RowBuilder) -> Result<QueryResult, DatabaseError> {
+    pub fn insert(&mut self, stream: &str, row_builder: RowBuilder) -> DatabaseResult<QueryResult> {
         let stream = self.get_stream_mut(stream).ok_or(DatabaseError::StreamNotFound)?;
         let id = stream.insert(row_builder)?;
         Ok(QueryResult::Insert(id))
@@ -142,7 +142,7 @@ impl Database {
 
     pub fn declare_stream(&mut self,
                           stream: &str,
-                          fields: Vec<ColumnSpec>) -> Result<QueryResult, DatabaseError> {
+                          fields: Vec<ColumnSpec>) -> DatabaseResult<QueryResult> {
         let stream = self.create_stream(stream)?;
         for col_spec in fields {
             stream.schema.add_type(&col_spec.name, col_spec.ftype);
