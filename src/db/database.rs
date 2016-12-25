@@ -9,7 +9,8 @@ use super::parser::{parse_statement, Statement, ParseError, ColumnSpec};
 use super::row::builder::RowBuilder;
 use super::parser::Expression;
 
-
+use super::storage::disk::Disk;
+use super::storage::memory::Memory;
 
 #[derive(Debug, PartialEq)]
 pub enum DatabaseError {
@@ -70,12 +71,17 @@ impl Database {
         }
     }
     pub fn new_temp() -> Database {
-        let tmpdir = TempDir::new("totalrecalldb").expect("Getting temp dir failed");
+        let tmpdir = TempDir::new("totalrecalldb").expect("Creating temp dir failed");
+        info!("Created temporary DB at {:?}", tmpdir.path());
         Database::new(tmpdir.into_path())
     }
 
     pub fn create_stream(&mut self, name: &str) -> Result<&mut Stream, DatabaseError> {
-        let tmp = Stream::new();
+        let mut p = self.path.clone();
+        p.push(name);
+        let storage = Disk::new(50, p).expect("Could not create disk storage");
+        let tmp = Stream::new(storage);
+
         if self.tables.contains_key(name) {
             return Err(DatabaseError::TableExists);
         }

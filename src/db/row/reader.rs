@@ -96,10 +96,12 @@ mod tests {
     use db::row::RowBuilder;
     use db::stream::Stream;
     use db::schema::Type;
+    use db::storage::Memory;
 
     #[test]
     fn test_row_reader_simple() {
-        let mut stream = Stream::new();
+        let storage = Memory::new().expect("No memory storage wtf?");
+        let mut stream = Stream::new(storage);
         stream.schema.add_type("name", Type::String);
 
         let mut row = RowBuilder::new();

@@ -32,7 +32,7 @@ use std::path::PathBuf;
 fn main() {
     println!("Starting the worst database ever created!! (exit to exit)");
     let server = Server::new();
-    let app = App::new("StreamingDB")
+    let app = App::new("TotalRecallDB")
                   .version("v1.0")
                   .author("Jon Haddad, <jon@jonhaddad.com>")
                   .subcommand(SubCommand::with_name("test"))
@@ -45,16 +45,18 @@ fn main() {
 }
 
 fn run_test_repl() {
+    let _ = env_logger::init();
     println!("Running test repl");
     // use local dir "dbs"
-    let dbdir = "trdbs";
-    fs::create_dir(dbdir);
+    let dbdir = "trdb";
+    if let Err(x) = fs::create_dir(dbdir) {
+        warn!("Error creating directory {}", x);
+    }
     let mut db = Database::new(PathBuf::from(dbdir));
     let mut stdin = stdin();
     let mut stdout = stdout();
     let prompt = "embedded>";
 
-    let _ = env_logger::init();
 
     loop {
 

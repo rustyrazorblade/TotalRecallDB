@@ -3,13 +3,13 @@ use std::path::PathBuf;
 use super::{Storage, StorageError, StorageResult};
 use super::Page;
 
-struct Disk {
+pub struct Disk {
     segment_size: usize, // bytes
     directory: PathBuf,
 }
 
 impl Disk {
-    fn new(segment_size: usize, dir: PathBuf) -> StorageResult<Disk> {
+    pub fn new(segment_size: usize, dir: PathBuf) -> StorageResult<Disk> {
         Ok(Disk{segment_size:segment_size,
                 directory: dir})
     }

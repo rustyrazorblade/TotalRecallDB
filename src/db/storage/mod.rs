@@ -3,7 +3,11 @@ pub mod memory;
 pub mod disk;
 
 use super::storage::page::Page;
+pub use self::memory::Memory;
+pub use self::disk::Disk;
 
+
+#[derive(Debug)]
 pub enum StorageError {
     PageNotFound,
     StreamAllocationError, // could not create a stream

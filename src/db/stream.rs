@@ -4,8 +4,10 @@ use std::error;
 use super::row::{Row, RowError, RowBuilder, RowReader};
 use super::schema::{Schema, Type};
 use super::value::Value;
+use super::storage::Storage;
 use super::parser::Expression;
 use std::ops::{Deref, DerefMut};
+use super::storage::Memory;
 
 #[derive(Debug)]
 pub enum StreamError {
@@ -55,7 +57,7 @@ This is a weird DB.  There's no user defined primary key,
 since everything is based off append only streaming
 */
 impl Stream {
-    pub fn new() -> Stream {
+    pub fn new<S: Storage>(storage: S) -> Stream {
         let mut stream = Stream::new_empty();
         stream.schema.add_type("_id", Type::Int);
         stream.schema.add_type("_created", Type::Timestamp);
@@ -146,9 +148,11 @@ mod tests {
     use db::value::{Value, TypedValue};
     use std::collections::HashMap;
     use self::test::Bencher;
+    use super::Memory;
 
     fn get_stream() -> Stream {
-        let mut s = Stream::new();
+        let storage = Memory::new().expect("No memory storage wtf?");
+        let mut s = Stream::new(storage);
         s.schema.add_type("name", Type::String);
         s.schema.add_type("age", Type::Int);
         s.schema.add_type("created", Type::Timestamp);
@@ -174,7 +178,8 @@ mod tests {
 
     #[test]
     fn test_insert_works_normal_case() {
-        let mut s = Stream::new();
+        let storage = Memory::new().expect("No memory storage wtf?");
+        let mut s = Stream::new(storage);
         let name_id = s.schema.add_type("name", Type::String);
 
         let mut row = RowBuilder::new();
