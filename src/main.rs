@@ -10,6 +10,7 @@ extern crate termion;
 extern crate byteorder;
 extern crate env_logger;
 extern crate vec_map;
+extern crate tempdir;
 
 #[macro_use]
 extern crate log;
@@ -23,10 +24,10 @@ use clap::{Arg, App, SubCommand};
 
 use std::io::{self, Read};
 use std::io::{Write, stdout, stdin};
-
+use std::fs;
 use termion::input::TermRead;
 use termion::{color, style};
-
+use std::path::PathBuf;
 
 fn main() {
     println!("Starting the worst database ever created!! (exit to exit)");
@@ -45,7 +46,10 @@ fn main() {
 
 fn run_test_repl() {
     println!("Running test repl");
-    let mut db = Database::new();
+    // use local dir "dbs"
+    let dbdir = "trdbs";
+    fs::create_dir(dbdir);
+    let mut db = Database::new(PathBuf::from(dbdir));
     let mut stdin = stdin();
     let mut stdout = stdout();
     let prompt = "embedded>";

@@ -16,7 +16,7 @@ fn get_sample_schema() -> Schema {
 }
 
 fn create_test_db() -> Database {
-    let mut db = Database::new();
+    let mut db = Database::new_temp();
     // create a sample stream
     {
         let stream = db.create_stream("test").expect("Could not create stream");

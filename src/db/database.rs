@@ -1,8 +1,15 @@
 use std::collections::HashMap;
+use std::path::PathBuf;
+use std::env;
+
+use tempdir::TempDir;
+
 use super::stream::{Stream, StreamError};
 use super::parser::{parse_statement, Statement, ParseError, ColumnSpec};
 use super::row::builder::RowBuilder;
 use super::parser::Expression;
+
+
 
 #[derive(Debug, PartialEq)]
 pub enum DatabaseError {
@@ -50,14 +57,21 @@ impl ResultSet {
 }
 
 pub struct Database {
+    path: PathBuf,
     tables: HashMap<String, Stream>
 }
 
 impl Database {
-    pub fn new() -> Database {
+    pub fn new(path: PathBuf) -> Database {
+        // create the directory if it doesn't exist?
         Database{
-            tables: HashMap::new()
+            tables: HashMap::new(),
+            path: path,
         }
+    }
+    pub fn new_temp() -> Database {
+        let tmpdir = TempDir::new("totalrecalldb").expect("Getting temp dir failed");
+        Database::new(tmpdir.into_path())
     }
 
     pub fn create_stream(&mut self, name: &str) -> Result<&mut Stream, DatabaseError> {
@@ -132,7 +146,7 @@ mod tests {
 
     // returns a valid DB for use with testing with valid simple schema
     fn get_db_with_stream() -> Database {
-        let mut db = Database::new();
+        let mut db = Database::new_temp();
         db.create_stream("Jon");
 
         db
@@ -140,7 +154,7 @@ mod tests {
 
     #[test]
     fn create_table() {
-        let mut db = Database::new();
+        let mut db = Database::new_temp();
         db.create_stream("Jon");
     }
 

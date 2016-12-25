@@ -2,7 +2,7 @@ use db::database::{Database, QueryResult, DatabaseError};
 use db::schema::Type;
 
 fn get_db() -> Database {
-    let mut db = Database::new();
+    let mut db = Database::new_temp();
     {
         let mut stream = db.create_stream("users").unwrap();
         stream.schema.add_type("name", Type::String);
@@ -13,7 +13,7 @@ fn get_db() -> Database {
 
 #[test]
 fn real_db_insert_parsing() {
-    let mut db = Database::new();
+    let mut db = Database::new_temp();
     {
         let mut stream = db.create_stream("users").unwrap();
         stream.schema.add_type("age", Type::String);
@@ -37,7 +37,7 @@ fn real_db_insert_parsing() {
 #[test]
 fn test_quoted_string_insert() {
 
-    let mut db = Database::new();
+    let mut db = Database::new_temp();
     {
         let mut stream = db.create_stream("users").unwrap();
         stream.schema.add_type("name", Type::String);
