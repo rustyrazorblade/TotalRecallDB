@@ -1,16 +1,17 @@
 
+use std::path::PathBuf;
 use super::{Storage, StorageError, StorageResult};
 use super::Page;
 
 struct Disk {
     segment_size: usize, // bytes
-    directory: String,
+    directory: PathBuf,
 }
 
 impl Disk {
-    fn new(segment_size: usize, dir: &str) -> StorageResult<Disk> {
+    fn new(segment_size: usize, dir: PathBuf) -> StorageResult<Disk> {
         Ok(Disk{segment_size:segment_size,
-                directory: dir.to_string()})
+                directory: dir})
     }
 }
 
