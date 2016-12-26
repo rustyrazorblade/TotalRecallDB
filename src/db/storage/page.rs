@@ -12,7 +12,7 @@ pub struct Page {
 }
 
 #[derive(Debug)]
-enum PageError {
+pub enum PageError {
     Full
 }
 
@@ -34,7 +34,7 @@ impl Page {
     // can fail if the page is already full
     // if it fails, the storage engine will have to flush this page
     // then allocate a new page
-    fn write(&mut self, bytes: &[u8]) -> PageResult<()> {
+    pub fn write(&mut self, bytes: &[u8]) -> PageResult<()> {
         if bytes.len() > self.space_available() {
             return Err(PageError::Full)
         }
@@ -43,6 +43,7 @@ impl Page {
         Ok(())
     }
 
+    // internal call, try to write instead since it holds a mutable ref
     fn space_available(&self) -> usize {
         PAGE_SIZE - HEADER_SIZE_IN_BYTES - self.bytes_used
     }

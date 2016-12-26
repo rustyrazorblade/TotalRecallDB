@@ -79,14 +79,16 @@ impl Database {
     }
 
     pub fn create_stream(&mut self, name: &str) -> DatabaseResult<&mut Stream> {
-        let mut p = self.path.clone();
-        p.push(name);
-        let storage = Disk::new(50, p).expect("Could not create disk storage");
-        let tmp = Stream::new(storage);
-
         if self.tables.contains_key(name) {
             return Err(DatabaseError::TableExists);
         }
+
+        let mut p = self.path.clone();
+        p.push(name);
+
+        let storage = Disk::new(50, p).expect("Could not create disk storage");
+        let tmp = Stream::new(storage);
+
         self.tables.insert(name.to_string(), tmp);
         let stream = self.tables.get_mut(name).unwrap();
         Ok(stream)

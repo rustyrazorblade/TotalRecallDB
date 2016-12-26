@@ -2,7 +2,7 @@ pub mod page;
 pub mod memory;
 pub mod disk;
 
-use super::storage::page::{Page, PAGE_SIZE};
+use super::storage::page::{Page, PAGE_SIZE, PageError};
 pub use self::memory::Memory;
 pub use self::disk::Disk;
 
