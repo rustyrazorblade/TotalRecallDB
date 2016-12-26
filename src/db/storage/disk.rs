@@ -12,6 +12,7 @@ pub struct Disk {
     directory: PathBuf,
     first_segment: u64,
     segments: Vec<Segment>,
+    current_page: Page,
 }
 
 impl Disk {
@@ -22,16 +23,19 @@ impl Disk {
                 directory: dir,
                 pages_per_segment: pages_per_segment,
                 segments: Vec::new(),
-                first_segment: 0})
+                first_segment: 0,
+                current_page: Page::new()})
     }
 }
 
 
 // on disk storage will have to be broken into segments.
 // a segment will be a fixed number of pages
+#[derive(Debug)]
 struct Segment {
     fp: File,
 }
+#[derive(Debug)]
 enum SegmentError {
     FlushFailure
 }
@@ -47,6 +51,14 @@ impl Segment {
     fn flush() -> SegmentResult<()> {
         unimplemented!()
     }
+
+    fn write(&mut self, data: &[u8]) -> SegmentResult<()> {
+        // append
+        unimplemented!()
+    }
+    fn read_page(&self, page: u64) -> Page {
+        unimplemented!()
+    }
 }
 
 #[cfg(test)]
@@ -57,7 +69,8 @@ mod segment_tests {
     fn test_normal_segment_usage() {
         let dir = TempDir::new("total_recall_segments").expect("Couldn't make a temp dir");
         let d2 = dir.path().join("segment.seg");
-        let segment = Segment::new(&d2);
+        let segment = Segment::new(&d2).expect("Could not create segment");
+
     }
 }
 

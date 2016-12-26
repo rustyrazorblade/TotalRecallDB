@@ -22,7 +22,7 @@ struct Header;
 // page deals with bytes, and has zero knowledge of a Row
 // storage engine needs to serialize
 impl Page {
-    fn new() -> Page {
+    pub fn new() -> Page {
         Page{header: Header::new(),
              data: [0; 4096 - HEADER_SIZE_IN_BYTES],
              bytes_used: HEADER_SIZE_IN_BYTES,
