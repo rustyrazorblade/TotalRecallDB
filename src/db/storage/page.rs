@@ -38,8 +38,9 @@ impl Page {
         if bytes.len() > self.space_available() {
             return Err(PageError::Full)
         }
-
-        Err(PageError::Full)
+        self.data[self.bytes_used .. bytes.len() + self.bytes_used].copy_from_slice(bytes);
+        self.bytes_used += bytes.len();
+        Ok(())
     }
 
     fn space_available(&self) -> usize {
@@ -60,18 +61,21 @@ mod tests {
     #[test]
     fn test_page_insert_ok() {
         let mut p = Page::new();
-        
+
         assert_eq!(p.space_available(), PAGE_SIZE - HEADER_SIZE_IN_BYTES);
         assert_eq!(p.bytes_used, 0);
 
         let data: [u8; 16] = [0; 16];
         p.write(&data).expect("Data written");
-        assert_eq!(p.bytes_used, HEADER_SIZE_IN_BYTES + 16);
+        assert_eq!(p.bytes_used, 16);
     }
 
     #[test]
+    #[should_panic]
     fn test_page_fault() {
-
+        let mut p = Page::new();
+        let data: [u8; 5000] = [0; 5000];
+        p.write(&data).expect("Failure is expected");
     }
 }
 
