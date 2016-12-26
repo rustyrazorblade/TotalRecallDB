@@ -26,7 +26,7 @@ impl Page {
     pub fn new() -> Page {
         Page{header: Header::new(),
              data: [0; 4096 - HEADER_SIZE_IN_BYTES],
-             bytes_used: HEADER_SIZE_IN_BYTES,
+             bytes_used: 0,
              }
     }
 
@@ -35,11 +35,15 @@ impl Page {
     // if it fails, the storage engine will have to flush this page
     // then allocate a new page
     fn write(&mut self, bytes: &[u8]) -> PageResult<()> {
+        if bytes.len() > self.space_available() {
+            return Err(PageError::Full)
+        }
+
         Err(PageError::Full)
     }
 
-    fn space_available(self) -> usize {
-        PAGE_SIZE - self.bytes_used
+    fn space_available(&self) -> usize {
+        PAGE_SIZE - HEADER_SIZE_IN_BYTES - self.bytes_used
     }
 
 }
@@ -52,10 +56,11 @@ impl Header {
 
 #[cfg(test)]
 mod tests {
-    use super::{Page, HEADER_SIZE_IN_BYTES};
+    use super::{Page, HEADER_SIZE_IN_BYTES, PAGE_SIZE};
     #[test]
     fn test_page_insert_ok() {
         let mut p = Page::new();
+        assert_eq!(p.space_available(), PAGE_SIZE - HEADER_SIZE_IN_BYTES);
         let data: [u8; 16] = [0; 16];
         p.write(&data).expect("Data written");
         assert_eq!(p.bytes_used, HEADER_SIZE_IN_BYTES + 16);
