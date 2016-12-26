@@ -11,6 +11,7 @@ pub struct Page {
                                       // if we go past the page boundary on a write we fault
 }
 
+#[derive(Debug)]
 enum PageError {
     Full
 }
@@ -51,9 +52,13 @@ impl Header {
 
 #[cfg(test)]
 mod tests {
+    use super::{Page, HEADER_SIZE_IN_BYTES};
     #[test]
     fn test_page_insert_ok() {
-
+        let mut p = Page::new();
+        let data: [u8; 16] = [0; 16];
+        p.write(&data).expect("Data written");
+        assert_eq!(p.bytes_used, HEADER_SIZE_IN_BYTES + 16);
     }
 
     #[test]
