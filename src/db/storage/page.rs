@@ -60,7 +60,10 @@ mod tests {
     #[test]
     fn test_page_insert_ok() {
         let mut p = Page::new();
+        
         assert_eq!(p.space_available(), PAGE_SIZE - HEADER_SIZE_IN_BYTES);
+        assert_eq!(p.bytes_used, 0);
+
         let data: [u8; 16] = [0; 16];
         p.write(&data).expect("Data written");
         assert_eq!(p.bytes_used, HEADER_SIZE_IN_BYTES + 16);
