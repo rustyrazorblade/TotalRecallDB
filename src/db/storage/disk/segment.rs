@@ -1,5 +1,8 @@
 use std::fs::File;
 use std::path::{Path, PathBuf};
+use std::io::{SeekFrom, Seek};
+use std::io::Write;
+
 use super::{Page, PAGE_SIZE};
 
 // on disk storage will have to be broken into segments.
@@ -21,15 +24,17 @@ impl Segment {
         Ok(Segment{fp: fp})
     }
 
-    // flushes the current page to disk
-    fn flush() -> SegmentResult<()> {
-        unimplemented!()
+
+    pub fn write(&mut self, data: &Page) -> SegmentResult<()> {
+        // append a page to the current segment
+        // job of the Disk storage to flush when ready
+        // seek to the end of the segment
+        self.fp.seek(SeekFrom::End(0));
+        self.fp.write(&data.to_bytes()).expect("Write failed");
+        self.fp.flush();
+        Ok(())
     }
 
-    fn write(&mut self, data: &Page) -> SegmentResult<()> {
-        // append
-        unimplemented!()
-    }
     fn read_page(&self, page: u64) -> Page {
         unimplemented!()
     }
@@ -44,12 +49,18 @@ mod segment_tests {
     #[test]
     fn test_normal_segment_usage() {
         let dir = TempDir::new("total_recall_segments").expect("Couldn't make a temp dir");
+        info!("Created temp dir {:?}", dir);
         let d2 = dir.path().join("segment.seg");
-        let segment = Segment::new(&d2).expect("Could not create segment");
+        let mut segment = Segment::new(&d2).expect("Could not create segment");
 
-        let mut p = Page::new();
-        let data: [u8; 1024] = [0; 1024];
-        p.write(&data);
+        let mut page = Page::new();
+        let data: [u8; 1024] = [1; 1024];
+        page.write(&data);
+        segment.write(&page);
+
+        dir.into_path();
+
+
 
     }
 }

@@ -1,11 +1,17 @@
+use std::io::Cursor;
+use std::io::{Read, Write};
+
+use byteorder::{BigEndian, WriteBytesExt, ReadBytesExt};
 use db::row::Row;
+
 // mis info about what's on each page.
 const HEADER_SIZE_IN_BYTES : usize = 64;
 pub const PAGE_SIZE : usize = 4096;
 
 pub struct Page {
     header: Header,
-    data: [u8; PAGE_SIZE - HEADER_SIZE_IN_BYTES],
+//    data: [u8; PAGE_SIZE - HEADER_SIZE_IN_BYTES],
+    data: Vec<u8>,
     bytes_used: usize, // tracking where we are in the current page
 
                                       // if we go past the page boundary on a write we fault
@@ -20,12 +26,21 @@ type PageResult<T> = Result<T, PageError>;
 
 struct Header;
 
+impl Header {
+    fn as_vec(&self) -> Vec<u8> {
+        let result = Vec::with_capacity(HEADER_SIZE_IN_BYTES);
+        result
+    }
+}
+
 // page deals with bytes, and has zero knowledge of a Row
 // storage engine needs to serialize
 impl Page {
     pub fn new() -> Page {
+        let tmp: [u8; PAGE_SIZE - HEADER_SIZE_IN_BYTES];
+
         Page{header: Header::new(),
-             data: [0; 4096 - HEADER_SIZE_IN_BYTES],
+             data: Vec::with_capacity(PAGE_SIZE),
              bytes_used: 0,
              }
     }
@@ -38,14 +53,28 @@ impl Page {
         if bytes.len() > self.space_available() {
             return Err(PageError::Full)
         }
-        self.data[self.bytes_used .. bytes.len() + self.bytes_used].copy_from_slice(bytes);
-        self.bytes_used += bytes.len();
+        // we need the length of the row
+        let len = bytes.len() as u16;
+        self.data.write_u16::<BigEndian>(len);
+        self.data.write(bytes);
+
+        self.bytes_used += 2 + len as usize;
+
+        // TODO: update indexes
         Ok(())
     }
 
     // internal call, try to write instead since it holds a mutable ref
     fn space_available(&self) -> usize {
         PAGE_SIZE - HEADER_SIZE_IN_BYTES - self.bytes_used
+    }
+
+    // returns PAGE_SIZE bytes
+    pub fn to_bytes(&self) -> Vec<u8> {
+        let result = Vec::with_capacity(PAGE_SIZE);
+        // get the header
+        let header = self.header.as_vec();
+        result
     }
 
 }
@@ -68,7 +97,8 @@ mod tests {
 
         let data: [u8; 16] = [0; 16];
         p.write(&data).expect("Data written");
-        assert_eq!(p.bytes_used, 16);
+        // 2 extra bytes from the size
+        assert_eq!(p.bytes_used, 18);
     }
 
     #[test]
