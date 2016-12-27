@@ -28,7 +28,8 @@ struct Header;
 
 impl Header {
     fn as_vec(&self) -> Vec<u8> {
-        let result = Vec::with_capacity(HEADER_SIZE_IN_BYTES);
+        let mut result = Vec::with_capacity(HEADER_SIZE_IN_BYTES);
+        result.resize(HEADER_SIZE_IN_BYTES, 0);
         result
     }
 }
@@ -71,9 +72,12 @@ impl Page {
 
     // returns PAGE_SIZE bytes
     pub fn to_bytes(&self) -> Vec<u8> {
-        let result = Vec::with_capacity(PAGE_SIZE);
+        let mut result = Vec::with_capacity(PAGE_SIZE);
         // get the header
         let header = self.header.as_vec();
+        result.extend(header);
+        result.extend(&self.data);
+        result.resize(PAGE_SIZE, 0);
         result
     }
 
@@ -99,6 +103,9 @@ mod tests {
         p.write(&data).expect("Data written");
         // 2 extra bytes from the size
         assert_eq!(p.bytes_used, 18);
+
+        let result = p.to_bytes();
+        assert_eq!(result.len(), PAGE_SIZE);
     }
 
     #[test]
