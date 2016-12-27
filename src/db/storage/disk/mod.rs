@@ -7,6 +7,7 @@ use std::fs;
 
 use super::{Storage, StorageError, StorageResult};
 use super::{Page, PAGE_SIZE, PageError};
+use super::{Row, RowBuilder};
 
 pub use self::segment::Segment;
 
@@ -56,7 +57,7 @@ impl Storage for Disk {
     fn get_page(&self, _: u64) -> StorageResult<Page> {
         Err(StorageError::PageNotFound)
     }
-    fn insert(&mut self, row: &[u8]) -> StorageResult<()> {
+    fn insert(&mut self, row: &RowBuilder) -> StorageResult<()> {
 
 
         Err(StorageError::StreamAllocationError)

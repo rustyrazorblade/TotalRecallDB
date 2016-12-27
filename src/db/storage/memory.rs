@@ -1,5 +1,6 @@
 use super::{Storage, StorageResult, StorageError};
 use db::storage::Page;
+use super::{Row, RowBuilder};
 
 // in memory storage.  has a bunch of pages in a vector
 pub struct Memory {
@@ -14,7 +15,7 @@ impl Storage for Memory {
     fn get_page(&self, num: u64) -> StorageResult<Page> {
         Err(StorageError::PageNotFound)
     }
-    fn insert(&mut self, row: &[u8]) -> StorageResult<()> {
+    fn insert(&mut self, row: &RowBuilder) -> StorageResult<()> {
         unimplemented!()
     }
 }
