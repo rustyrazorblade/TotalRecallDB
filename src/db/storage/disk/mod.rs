@@ -91,9 +91,9 @@ mod tests {
     use tempdir::TempDir;
 
     fn get_disk_storage() -> Disk {
-        let dir = TempDir::new("disk_storage").expect("Need a temp dir");
-        let dir2 = dir.path().join("stream");
-        Disk::new(1, dir2).expect("Want that disk")
+        let mut dir = TempDir::new("disk_storage").expect("Need a temp dir").into_path();
+        dir.push("stream");
+        Disk::new(1, dir).expect("Want that disk")
     }
 
     #[test]
