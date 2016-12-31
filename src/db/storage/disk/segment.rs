@@ -10,6 +10,7 @@ use super::{Page, PAGE_SIZE};
 #[derive(Debug)]
 pub struct Segment {
     fp: File,
+    pages: usize,
 }
 #[derive(Debug)]
 pub enum SegmentError {
@@ -21,7 +22,7 @@ impl Segment {
     pub fn new(location: &Path) -> SegmentResult<Segment> {
         info!("Creating segment at: {:?}", location);
         let fp = File::create(location).expect("Could not created segment");
-        Ok(Segment{fp: fp})
+        Ok(Segment{fp: fp, pages: 0})
     }
 
 
@@ -32,6 +33,7 @@ impl Segment {
         self.fp.seek(SeekFrom::End(0));
         self.fp.write(&data.to_bytes()).expect("Write failed");
         self.fp.flush();
+        self.pages += 1;
         Ok(())
     }
 

@@ -21,6 +21,8 @@ pub struct Disk {
     current_page: Page,
     current_segment: Segment,
     segment_sequence_id: u64,
+    flushes: usize,
+    
 }
 
 impl Disk {
@@ -32,6 +34,7 @@ impl Disk {
 
         let segment_size = segment_size_in_mb * 1024 * 1024;
         let pages_per_segment = segment_size / PAGE_SIZE;
+        info!("pages per segment: {}", pages_per_segment);
 
         let segment = Disk::open_segment(&dir, 0).expect("Could not open new segment");
 
@@ -42,7 +45,8 @@ impl Disk {
             first_segment: 0,
             current_page: Page::new(),
             current_segment: segment,
-            segment_sequence_id: 0})
+            segment_sequence_id: 0,
+            flushes: 0})
     }
 
     pub fn open_segment(dir: &PathBuf, id: u64) -> StorageResult<Segment> {
@@ -54,6 +58,10 @@ impl Disk {
 
     }
 
+    fn set_pages_per_segment(&mut self, pages_per_segment: usize) {
+        self.pages_per_segment = pages_per_segment;
+    }
+
     // close the current segment and open a new one
     pub fn flush(&mut self) -> StorageResult<()> {
         info!("Flushing segment {}", self.segment_sequence_id);
@@ -62,6 +70,7 @@ impl Disk {
 //        self.current_segment.close();
         let segment = Disk::open_segment(&self.directory, self.segment_sequence_id).expect("Expected segment");
         self.current_segment = segment;
+        self.flushes += 1;
         Ok(())
     }
 
@@ -80,6 +89,7 @@ impl Storage for Disk {
         // write the page to the current segment
         // check if the segment is full
         // if it's full, close and open a new one
+
         Ok(())
     }
 
@@ -101,10 +111,14 @@ mod tests {
         let mut disk = get_disk_storage();
         disk.flush();
         disk.flush();
+
     }
 
     #[test]
     fn test_disk_writes_segments_correctly() {
+        let mut disk = get_disk_storage();
+        disk.set_pages_per_segment(1); // flush after every page
+
 
     }
 }
