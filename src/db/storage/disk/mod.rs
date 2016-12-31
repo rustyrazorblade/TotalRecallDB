@@ -22,7 +22,7 @@ pub struct Disk {
     current_segment: Segment,
     segment_sequence_id: u64,
     flushes: usize,
-    
+
 }
 
 impl Disk {
@@ -86,9 +86,11 @@ impl Storage for Disk {
         Err(StorageError::PageNotFound)
     }
     fn write_page(&mut self, page: &Page) -> StorageResult<()> {
-        // write the page to the current segment
-        // check if the segment is full
-        // if it's full, close and open a new one
+        self.current_segment.write(&page);
+        // if the segment is full, flush
+        if self.current_segment.pages >= self.pages_per_segment {
+            self.flush();
+        }
 
         Ok(())
     }
@@ -98,6 +100,7 @@ impl Storage for Disk {
 #[cfg(test)]
 mod tests {
     use super::{Disk, Page};
+    use db::storage::Storage;
     use tempdir::TempDir;
 
     fn get_disk_storage() -> Disk {
@@ -110,15 +113,26 @@ mod tests {
     fn test_disk_flush() {
         let mut disk = get_disk_storage();
         disk.flush();
+        assert_eq!(disk.flushes, 1);
         disk.flush();
+        assert_eq!(disk.flushes, 2);
 
     }
 
     #[test]
     fn test_disk_writes_segments_correctly() {
         let mut disk = get_disk_storage();
-        disk.set_pages_per_segment(1); // flush after every page
+        disk.set_pages_per_segment(2); // flush after every page
 
+        let mut page = Page::new();
+        let data: [u8; 16] = [0; 16];
+        page.write(&data);
+
+        disk.write_page(&page);
+        assert_eq!(disk.flushes, 0);
+
+        disk.write_page(&page);
+        assert_eq!(disk.flushes, 1);
 
     }
 }

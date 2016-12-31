@@ -10,7 +10,7 @@ use super::{Page, PAGE_SIZE};
 #[derive(Debug)]
 pub struct Segment {
     fp: File,
-    pages: usize,
+    pub pages: usize,
 }
 #[derive(Debug)]
 pub enum SegmentError {
@@ -61,8 +61,6 @@ mod segment_tests {
         segment.write(&page);
 
         dir.into_path();
-
-
 
     }
 }
