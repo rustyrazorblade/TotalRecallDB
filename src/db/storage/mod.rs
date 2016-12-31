@@ -1,6 +1,7 @@
 pub mod page;
 pub mod memory;
 pub mod disk;
+pub mod engine;
 
 use super::storage::page::{Page, PAGE_SIZE, PageError};
 pub use self::memory::Memory;
