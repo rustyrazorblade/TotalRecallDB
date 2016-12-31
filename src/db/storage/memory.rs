@@ -15,7 +15,7 @@ impl Storage for Memory {
     fn get_page(&self, num: u64) -> StorageResult<Page> {
         Err(StorageError::PageNotFound)
     }
-    fn insert(&mut self, row: &RowBuilder) -> StorageResult<()> {
+    fn write_page(&mut self, page: &Page) -> StorageResult<()> {
         unimplemented!()
     }
 }

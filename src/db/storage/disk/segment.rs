@@ -19,7 +19,7 @@ type SegmentResult<T> = Result<T, SegmentError>;
 
 impl Segment {
     pub fn new(location: &Path) -> SegmentResult<Segment> {
-        println!("Creating segment at: {:?}", location);
+        info!("Creating segment at: {:?}", location);
         let fp = File::create(location).expect("Could not created segment");
         Ok(Segment{fp: fp})
     }

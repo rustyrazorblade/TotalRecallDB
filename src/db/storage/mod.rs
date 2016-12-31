@@ -22,6 +22,7 @@ pub trait Storage {
     fn get_page(&self, u64) -> StorageResult<Page>;
     // storage insert doesn't know about Rows
     // the stream will serialize the data before coming here
-    fn insert(&mut self, row: &RowBuilder) -> StorageResult<()>;
+    fn write_page(&mut self, page: &Page) -> StorageResult<()>;
+//    fn insert(&mut self, row: &RowBuilder) -> StorageResult<()>;
 
 }
