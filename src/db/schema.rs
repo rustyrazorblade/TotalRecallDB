@@ -26,17 +26,17 @@ pub struct Schema {
     fields: HashMap<String, TypeDef>,
 }
 
+
 impl Schema {
     pub fn new() -> Schema {
         Schema{num_fields: 0, fields: HashMap::new()}
     }
 
     pub fn add_type(&mut self, name: &str, dbtype: Type) -> usize {
-        let next_id = self.num_fields + 1;
-        let typedef = TypeDef{ id: next_id, dbtype: dbtype};
+        let typedef = TypeDef{ id: self.num_fields, dbtype: dbtype};
         self.fields.insert(name.to_string(), typedef);
         self.num_fields += 1;
-        next_id
+        self.num_fields - 1
 
     }
     pub fn get(&self, name: &str) -> Option<&TypeDef> {

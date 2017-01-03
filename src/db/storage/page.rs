@@ -22,7 +22,7 @@ pub enum PageError {
     Full
 }
 
-type PageResult<T> = Result<T, PageError>;
+pub type PageResult<T> = Result<T, PageError>;
 
 struct Header;
 
