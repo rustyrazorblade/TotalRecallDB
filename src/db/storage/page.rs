@@ -5,7 +5,7 @@ use byteorder::{BigEndian, WriteBytesExt, ReadBytesExt};
 use db::row::Row;
 
 // mis info about what's on each page.
-const HEADER_SIZE_IN_BYTES : usize = 64;
+const HEADER_SIZE_IN_BYTES : usize = 32;
 pub const PAGE_SIZE : usize = 4096;
 
 pub struct Page {
@@ -24,13 +24,30 @@ pub enum PageError {
 
 pub type PageResult<T> = Result<T, PageError>;
 
-struct Header;
+struct Header {
+    first_id: u64,
+    last_id: u64
+}
 
 impl Header {
     fn as_vec(&self) -> Vec<u8> {
         let mut result = Vec::with_capacity(HEADER_SIZE_IN_BYTES);
-        result.resize(HEADER_SIZE_IN_BYTES, 0);
+//        result.resize(HEADER_SIZE_IN_BYTES, 0);
+        result.write_u64::<BigEndian>(self.first_id);
+        result.write_u64::<BigEndian>(self.last_id);
         result
+    }
+}
+
+impl Header {
+    fn new() -> Header {
+        Header{first_id: 0, last_id: 0}
+    }
+    fn from_bytes(bytes: &[u8]) -> Header {
+        let mut cur = Cursor::new(bytes);
+        let first_id = cur.read_u64::<BigEndian>().unwrap();
+        let last_id = cur.read_u64::<BigEndian>().unwrap();
+        Header{first_id: first_id, last_id: last_id}
     }
 }
 
@@ -83,11 +100,7 @@ impl Page {
 
 }
 
-impl Header {
-    fn new() -> Header {
-        Header{}
-    }
-}
+
 
 #[cfg(test)]
 mod tests {
