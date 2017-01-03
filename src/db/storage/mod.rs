@@ -27,3 +27,4 @@ pub trait Storage {
 //    fn insert(&mut self, row: &RowBuilder) -> StorageResult<()>;
 
 }
+

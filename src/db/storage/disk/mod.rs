@@ -18,7 +18,6 @@ pub struct Disk {
     directory: PathBuf,
     first_segment: u64,
     segments: Vec<Segment>,
-    current_page: Page,
     current_segment: Segment,
     segment_sequence_id: u64,
     flushes: usize,
@@ -43,7 +42,6 @@ impl Disk {
             pages_per_segment: pages_per_segment,
             segments: Vec::new(),
             first_segment: 0,
-            current_page: Page::new(),
             current_segment: segment,
             segment_sequence_id: 0,
             flushes: 0})
