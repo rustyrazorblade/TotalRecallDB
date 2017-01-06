@@ -1,6 +1,7 @@
 
 pub mod parser;
 pub mod expressions;
+pub mod storage;
 
 use db::Database;
 use db::schema::{Type, Schema};

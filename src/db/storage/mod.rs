@@ -8,7 +8,7 @@ pub use self::memory::Memory;
 pub use self::disk::Disk;
 
 pub use db::row::{RowBuilder, Row};
-
+pub use self::engine::StorageEngine;
 
 #[derive(Debug)]
 pub enum StorageError {

@@ -5,7 +5,7 @@ use db::row::Row;
 use db::schema::Schema;
 use db::storage::page::{PageResult, PageError};
 
-struct StorageEngine<'a> {
+pub struct StorageEngine<'a> {
     storage: Box<Storage + 'a>,
     current_page: Page,
 }
