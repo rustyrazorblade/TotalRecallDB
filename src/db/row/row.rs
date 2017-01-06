@@ -11,7 +11,6 @@ use vec_map::VecMap;
 
 // mine
 use db::value::Value;
-use super::Header;
 
 #[derive(Debug, PartialEq)]
 pub enum RowError {
