@@ -51,7 +51,7 @@ impl Disk {
         let name = format!("seg{}.segment", id);
         let seg_path = dir.as_path().join(name);
         info!("Creating new segment at {:?}", seg_path);
-        let segment = Segment::new(&seg_path).expect("Disk Storage: Could not create segment");
+        let segment = Segment::new(&seg_path, 0).expect("Disk Storage: Could not create segment");
         Ok(segment)
 
     }
