@@ -99,7 +99,10 @@ impl Page {
         result
     }
     pub fn from_bytes(bytes: Vec<u8>) -> PageResult<Page> {
-        Err(PageError::NotFound)
+        let p = Page{header: Header::new(),
+                     bytes_used: 0,
+                     data: bytes};
+        Ok(p)
     }
 
 }

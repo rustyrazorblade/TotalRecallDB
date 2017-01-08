@@ -20,12 +20,19 @@ pub struct Segment {
 #[derive(Debug)]
 pub enum SegmentError {
     FlushFailure,
-    PageNotFound
+    PageNotFound,
+    UnknownError,
 }
 
+// TODO fix this up a bit
 impl From<PageError> for SegmentError {
     fn from(err: PageError) -> SegmentError {
-        SegmentError::PageNotFound
+        match err {
+            PageError::Full =>
+                SegmentError::PageNotFound,
+            PageError::NotFound =>
+                SegmentError::PageNotFound,
+        }
     }
 }
 
@@ -95,7 +102,7 @@ mod segment_tests {
 
         dir.into_path();
 
-        segment.read_page(0);
+        segment.read_page(0).expect("Page should be OK");
 
     }
 }
