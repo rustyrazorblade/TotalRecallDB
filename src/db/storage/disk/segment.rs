@@ -1,9 +1,9 @@
 use std::fs::File;
 use std::path::{Path, PathBuf};
 use std::io::{SeekFrom, Seek};
-use std::io::Write;
+use std::io::{Write, Read};
 
-use super::{Page, PAGE_SIZE};
+use super::{Page, PAGE_SIZE, PageError};
 
 // on disk storage will have to be broken into segments.
 // a segment will be a fixed number of pages
@@ -19,8 +19,17 @@ pub struct Segment {
 }
 #[derive(Debug)]
 pub enum SegmentError {
-    FlushFailure
+    FlushFailure,
+    PageNotFound
 }
+
+impl From<PageError> for SegmentError {
+    fn from(err: PageError) -> SegmentError {
+        SegmentError::PageNotFound
+    }
+}
+
+
 type SegmentResult<T> = Result<T, SegmentError>;
 
 impl Segment {
@@ -54,8 +63,17 @@ impl Segment {
         Ok(())
     }
 
-    fn read_page(&self, page: u64) -> Page {
-        unimplemented!()
+    fn read_page(&mut self, page: u64) -> SegmentResult<Page> {
+        let p = page - self.start_page;
+        let offset = p * PAGE_SIZE as u64;
+        self.fp.seek(SeekFrom::Start(offset));
+
+        let mut data : Vec<u8> = Vec::new();
+        self.fp.read(&mut data);
+
+        let page = Page::from_bytes(data)?;
+        Ok(page)
+
     }
 }
 
@@ -76,6 +94,8 @@ mod segment_tests {
         segment.write(&page);
 
         dir.into_path();
+
+        segment.read_page(0);
 
     }
 }

@@ -19,7 +19,8 @@ pub struct Page {
 
 #[derive(Debug)]
 pub enum PageError {
-    Full
+    Full,
+    NotFound,
 }
 
 pub type PageResult<T> = Result<T, PageError>;
@@ -96,6 +97,9 @@ impl Page {
         result.extend(&self.data);
         result.resize(PAGE_SIZE, 0);
         result
+    }
+    pub fn from_bytes(bytes: Vec<u8>) -> PageResult<Page> {
+        Err(PageError::NotFound)
     }
 
 }
