@@ -9,7 +9,6 @@ const HEADER_SIZE_IN_BYTES : usize = 32;
 pub const PAGE_SIZE : usize = 4096;
 
 pub struct Page {
-    header: Header,
 //    data: [u8; PAGE_SIZE - HEADER_SIZE_IN_BYTES],
     data: Vec<u8>,
     bytes_used: usize, // tracking where we are in the current page
@@ -25,41 +24,13 @@ pub enum PageError {
 
 pub type PageResult<T> = Result<T, PageError>;
 
-struct Header {
-    first_id: u64,
-    last_id: u64
-}
-
-impl Header {
-    fn as_vec(&self) -> Vec<u8> {
-        let mut result = Vec::with_capacity(HEADER_SIZE_IN_BYTES);
-//        result.resize(HEADER_SIZE_IN_BYTES, 0);
-        result.write_u64::<BigEndian>(self.first_id);
-        result.write_u64::<BigEndian>(self.last_id);
-        result
-    }
-}
-
-impl Header {
-    fn new() -> Header {
-        Header{first_id: 0, last_id: 0}
-    }
-    fn from_bytes(bytes: &[u8]) -> Header {
-        let mut cur = Cursor::new(bytes);
-        let first_id = cur.read_u64::<BigEndian>().unwrap();
-        let last_id = cur.read_u64::<BigEndian>().unwrap();
-        Header{first_id: first_id, last_id: last_id}
-    }
-}
-
 // page deals with bytes, and has zero knowledge of a Row
 // storage engine needs to serialize
 impl Page {
     pub fn new() -> Page {
         let tmp: [u8; PAGE_SIZE - HEADER_SIZE_IN_BYTES];
 
-        Page{header: Header::new(),
-             data: Vec::with_capacity(PAGE_SIZE),
+        Page{data: Vec::with_capacity(PAGE_SIZE),
              bytes_used: 0,
              }
     }
@@ -92,15 +63,12 @@ impl Page {
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut result = Vec::with_capacity(PAGE_SIZE);
         // get the header
-        let header = self.header.as_vec();
-        result.extend(header);
         result.extend(&self.data);
         result.resize(PAGE_SIZE, 0);
         result
     }
     pub fn from_bytes(bytes: Vec<u8>) -> PageResult<Page> {
-        let p = Page{header: Header::new(),
-                     bytes_used: 0,
+        let p = Page{bytes_used: 0,
                      data: bytes};
         Ok(p)
     }
