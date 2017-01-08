@@ -5,6 +5,10 @@ use std::io::{Write, Read};
 
 use super::{Page, PAGE_SIZE, PageError};
 
+/// Segments are a bunch of of Pages organized into files
+/// A segment might be a few hundred (or thousand pages)
+/// Currently each segment has 2 files, a data file and metadata
+
 // on disk storage will have to be broken into segments.
 // a segment will be a fixed number of pages
 #[derive(Debug)]
