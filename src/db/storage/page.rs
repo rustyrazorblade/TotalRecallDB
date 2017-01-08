@@ -5,7 +5,6 @@ use byteorder::{BigEndian, WriteBytesExt, ReadBytesExt};
 use db::row::Row;
 
 // mis info about what's on each page.
-const HEADER_SIZE_IN_BYTES : usize = 32;
 pub const PAGE_SIZE : usize = 4096;
 
 pub struct Page {
@@ -28,7 +27,7 @@ pub type PageResult<T> = Result<T, PageError>;
 // storage engine needs to serialize
 impl Page {
     pub fn new() -> Page {
-        let tmp: [u8; PAGE_SIZE - HEADER_SIZE_IN_BYTES];
+        let tmp: [u8; PAGE_SIZE];
 
         Page{data: Vec::with_capacity(PAGE_SIZE),
              bytes_used: 0,
@@ -56,7 +55,7 @@ impl Page {
 
     // internal call, try to write instead since it holds a mutable ref
     fn space_available(&self) -> usize {
-        PAGE_SIZE - HEADER_SIZE_IN_BYTES - self.bytes_used
+        PAGE_SIZE - self.bytes_used
     }
 
     // returns PAGE_SIZE bytes
@@ -79,12 +78,12 @@ impl Page {
 
 #[cfg(test)]
 mod tests {
-    use super::{Page, HEADER_SIZE_IN_BYTES, PAGE_SIZE};
+    use super::{Page, PAGE_SIZE};
     #[test]
     fn test_page_insert_ok() {
         let mut p = Page::new();
 
-        assert_eq!(p.space_available(), PAGE_SIZE - HEADER_SIZE_IN_BYTES);
+        assert_eq!(p.space_available(), PAGE_SIZE);
         assert_eq!(p.bytes_used, 0);
 
         let data: [u8; 16] = [0; 16];
