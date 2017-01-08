@@ -13,6 +13,9 @@ pub struct Segment {
     meta: File,
     pub pages: usize,
     row_offsets: Vec<usize>, // index is the page index of the segment value is the first id
+    start_page: u64, // offset.  page 0 in first segment is 0.
+
+
 }
 #[derive(Debug)]
 pub enum SegmentError {
@@ -22,7 +25,7 @@ type SegmentResult<T> = Result<T, SegmentError>;
 
 impl Segment {
 
-    pub fn new(location: &Path, num: u64) -> SegmentResult<Segment> {
+    pub fn new(location: &Path, num: u64, start_page: u64) -> SegmentResult<Segment> {
         let name = format!("segment-{}.data", num);
         let seg_path = location.join(name);
 
@@ -30,11 +33,13 @@ impl Segment {
         let meta_path = location.join(name);
 
         info!("Creating segment at: {:?}", seg_path);
+
         let fp = File::create(seg_path).expect("Could not created segment");
-        let meta = File::create(meta_path).expect("Could not created segment");
+        let meta = File::create(meta_path).expect("Could not created segment metadata");
 
         Ok(Segment{fp: fp, pages: 0, meta: meta,
-                   row_offsets: Vec::new()})
+                   row_offsets: Vec::new(),
+                   start_page: start_page})
     }
 
 
@@ -63,7 +68,7 @@ mod segment_tests {
     #[test]
     fn test_normal_segment_usage() {
         let dir = TempDir::new("total_recall_segments").expect("Couldn't make a temp dir");
-        let mut segment = Segment::new(dir.path(), 0).expect("Could not create segment");
+        let mut segment = Segment::new(dir.path(), 0, 0).expect("Could not create segment");
 
         let mut page = Page::new();
         let data: [u8; 1024] = [1; 1024];

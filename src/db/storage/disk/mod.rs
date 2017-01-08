@@ -49,7 +49,7 @@ impl Disk {
 
     pub fn open_segment(dir: &PathBuf, id: u64) -> StorageResult<Segment> {
         info!("Creating new segment at {:?}", dir);
-        let segment = Segment::new(&dir, 0).expect("Disk Storage: Could not create segment");
+        let segment = Segment::new(&dir, 0, 0).expect("Disk Storage: Could not create segment");
         Ok(segment)
 
     }
