@@ -48,10 +48,8 @@ impl Disk {
     }
 
     pub fn open_segment(dir: &PathBuf, id: u64) -> StorageResult<Segment> {
-        let name = format!("seg{}.segment", id);
-        let seg_path = dir.as_path().join(name);
-        info!("Creating new segment at {:?}", seg_path);
-        let segment = Segment::new(&seg_path, 0).expect("Disk Storage: Could not create segment");
+        info!("Creating new segment at {:?}", dir);
+        let segment = Segment::new(&dir, 0).expect("Disk Storage: Could not create segment");
         Ok(segment)
 
     }
@@ -131,6 +129,8 @@ mod tests {
 
         disk.write_page(&page);
         assert_eq!(disk.flushes, 1);
+
+        disk.get_page(0);
 
     }
 }
