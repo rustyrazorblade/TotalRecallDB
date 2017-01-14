@@ -40,7 +40,7 @@ fn test_storage_engine_creation() {
 }
 
 #[test]
-fn test_write_and_read_page() {
+fn test_insert_and_get() {
     fn body(s: &StorageEngine) {
 
     }
