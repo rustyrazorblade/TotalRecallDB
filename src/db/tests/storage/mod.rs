@@ -13,6 +13,17 @@ macro_rules! test_storage {
     };
 }
 
+#[macro_export]
+macro_rules! storage {
+    ($f:ident) => {
+        let storage = get_memory_storage();
+        let storage2 = get_disk_storage();
+
+        $f(&storage);
+        $f(&storage2);
+    };
+}
+
 fn get_memory_storage<'a>() -> StorageEngine<'a> {
     let mem = Memory::new().expect("Memory storage");
     StorageEngine::new(mem)
@@ -40,5 +51,13 @@ fn test_storage_engine_creation() {
 
 fn test_page_write_and_get(s: &StorageEngine) {
 
+}
+
+#[test]
+fn test_blah() {
+    fn something(s: &StorageEngine) {
+
+    }
+    storage!(something);
 }
 
