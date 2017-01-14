@@ -6,14 +6,6 @@ use tempdir::TempDir;
 use db::storage::Storage;
 
 #[macro_export]
-macro_rules! test_storage {
-    ( $f:ident, $x:ident, $y:ident ) => {
-        $f(&$x);
-        $f(&$y);
-    };
-}
-
-#[macro_export]
 macro_rules! storage {
     ($f:ident) => {
         let storage = get_memory_storage();
@@ -40,24 +32,17 @@ fn get_disk_storage<'a>() -> StorageEngine<'a> {
 }
 
 
-
 #[test]
 fn test_storage_engine_creation() {
-    let storage = get_memory_storage();
-    let storage2 = get_disk_storage();
-
-    test_storage!(test_page_write_and_get, storage, storage2);
-}
-
-fn test_page_write_and_get(s: &StorageEngine) {
-
-}
-
-#[test]
-fn test_blah() {
     fn something(s: &StorageEngine) {
-
     }
     storage!(something);
 }
 
+#[test]
+fn test_write_and_read_page() {
+    fn body(s: &StorageEngine) {
+
+    }
+    storage!(body);
+}
