@@ -5,6 +5,7 @@ use db::storage::{Memory, Disk, StorageEngine};
 use tempdir::TempDir;
 use db::storage::Storage;
 
+#[macro_export]
 macro_rules! test_storage {
     ( $f:ident, $x:ident, $y:ident ) => {
         $f(&$x);
@@ -12,18 +13,27 @@ macro_rules! test_storage {
     };
 }
 
-#[test]
-fn test_storage_engine_creation() {
+fn get_memory_storage<'a>() -> StorageEngine<'a> {
     let mem = Memory::new().expect("Memory storage");
-    let storage = StorageEngine::new(mem);
+    StorageEngine::new(mem)
+}
 
+fn get_disk_storage<'a>() -> StorageEngine<'a> {
     // disk storage
     let tmp = TempDir::new("totalrecallwhatever").expect("Expected dir");
     let mut tmp2 = tmp.into_path();
     tmp2.push("blah");
 
     let disk = Disk::new(10, tmp2).expect("Disk storage");
-    let storage2 = StorageEngine::new(disk);
+    StorageEngine::new(disk)
+}
+
+
+
+#[test]
+fn test_storage_engine_creation() {
+    let storage = get_memory_storage();
+    let storage2 = get_disk_storage();
 
     test_storage!(test_page_write_and_get, storage, storage2);
 }

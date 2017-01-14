@@ -9,6 +9,7 @@ use db::stream::Stream;
 use db::row::RowBuilder;
 
 
+
 fn get_sample_schema() -> Schema {
     let mut s = Schema::new();
     s.add_type("name", Type::String);
