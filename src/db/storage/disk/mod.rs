@@ -19,6 +19,7 @@ pub struct Disk {
     first_segment: u64,
     segments: Vec<Segment>,
     current_segment: Segment,
+    // number of the current segment
     segment_sequence_id: u64,
     flushes: usize,
 
@@ -47,9 +48,9 @@ impl Disk {
             flushes: 0})
     }
 
-    pub fn open_segment(dir: &PathBuf, id: u64) -> StorageResult<Segment> {
+    pub fn open_segment(dir: &PathBuf, segment_id: u64) -> StorageResult<Segment> {
         info!("Creating new segment at {:?}", dir);
-        let segment = Segment::new(&dir, 0, 0).expect("Disk Storage: Could not create segment");
+        let segment = Segment::new(&dir, segment_id, 0).expect("Disk Storage: Could not create segment");
         Ok(segment)
 
     }
