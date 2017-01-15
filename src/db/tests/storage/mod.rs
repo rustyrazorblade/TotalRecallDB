@@ -5,7 +5,6 @@ use db::storage::{Memory, Disk, StorageEngine};
 use tempdir::TempDir;
 use db::storage::Storage;
 
-#[macro_export]
 macro_rules! storage {
     ($f:ident) => {
         let storage = get_memory_storage();

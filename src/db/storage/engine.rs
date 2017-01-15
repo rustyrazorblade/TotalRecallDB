@@ -5,6 +5,7 @@ use db::row::Row;
 use db::schema::Schema;
 use db::storage::page::{PageResult, PageError};
 
+
 pub struct StorageEngine<'a> {
     storage: Box<Storage + 'a>,
     current_page: Page,
@@ -18,6 +19,10 @@ impl<'a> StorageEngine<'a> {
                       current_page: page}
     }
 
+    /*
+    storage engine takes just a row here because this is just handling raw data storage, not indexes
+    the stream will handle indexes
+    */
     pub fn insert(&mut self, row: &Row, schema: &Schema) {
         // convert to bytes
         let data = row.to_vec();
